@@ -136,7 +136,7 @@ function RecordDialog:calculateSubsample()
 	assert(endFrame > 0, "End frame is less than 0")
 	--assert(endFrame < totalFrames, "End frame is greater than total frames")
 	assert(startFrame < endFrame, "Start frame is greater than end frame")
-
+	print(self.buffer)
 	self.samplePlayer:setPlayRange(startFrame, endFrame)
 end
 
@@ -227,6 +227,8 @@ function RecordDialog:getInputHandler()
 		AButtonUp = function()
 			if self.scrubView:isFocused() then
 				self.scrubView:setADown(false)
+				self:calculateSubsample()
+				self:playSubsample()
 			end
 		end,
 		leftButtonDown = function()

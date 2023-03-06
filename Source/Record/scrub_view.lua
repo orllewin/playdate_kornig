@@ -58,7 +58,9 @@ function ScrubView:setSampleLength(length)
 end
 
 function ScrubView:play()
-	self.timer = playdate.timer.new(self.length * 1000, margin, 400)
+	local startMS = self:getSubsampleStartMilliseconds()
+	local endMS = self:getSubsampleEndMilliseconds()
+	self.timer = playdate.timer.new(endMS - startMS, self.startSprite:getX(), self.endSprite:getX())
 	self.playing = true
 	self.caretSprite:show()
 end
