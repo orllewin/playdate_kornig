@@ -16,6 +16,8 @@ class('RecordDialog').extends(playdate.graphics.sprite)
 local graphics <const> = playdate.graphics
 local sound <const> = playdate.sound
 local sprites = {}
+local sin <const> = math.sin
+local cos <const> = math.cos
 
 local frame = 0
 
@@ -49,10 +51,14 @@ function RecordDialog:show(onSampleReady)
 	
 	graphics.setImageDrawMode(graphics.kDrawModeFillBlack)
 	self.levelLabel = LabelLeft("", 4, 4, 1.0)
+	self:addSprite(self.levelLabel)
 	self.titleLabel = LabelCentre("Record Sample", 200, 4, 1.0)
+	self:addSprite(self.titleLabel)
 	self.sourceLabel = LabelRight("Source: " .. sound.micinput.getSource(), 396, 4, 1.0)
+	self:addSprite(self.sourceLabel)
 	
 	self.scrubView = ScrubView(40)
+	self:addSprites(self.scrubView:getSprites())
 	
 	self.recordToggleButton = Button("Start Recording", 74, 120, function() 
 		self.recording = not self.recording
@@ -65,13 +71,14 @@ function RecordDialog:show(onSampleReady)
 			self.saveButton:setActive(true)
 			self.recordToggleButton:setFocus(false)
 			sound.micinput.stopRecording()
-		end
-		
+		end	
 	end)
-	self:addSprites(self.recordToggleButton:getSprites())
 	self.recordToggleButton:setFocus(true)
+	self:addSprites(self.recordToggleButton:getSprites())
+	
 	
 	self.remainingLabel = LabelLeft("Remaining buffer: " .. self.maxSeconds, 6, 150, 0.2)
+	self:addSprite(self.remainingLabel)
 	
 	self.previewButton = Button("Preview", 358, 120, function() 
 		print("Playing sample...")
@@ -79,7 +86,7 @@ function RecordDialog:show(onSampleReady)
 		self:playSubsample()
 	end)
 	self.previewButton:setActive(false)
-	self:addSprites(self.recordToggleButton:getSprites())
+	self:addSprites(self.previewButton:getSprites())
 	
 	self.cancelButton = Button("Cancel", 302, 215, function() 
 		self.onSampleReady(nil)
@@ -178,9 +185,16 @@ function RecordDialog:update()
 	-- Update remaining sample time when recording
 	if self.recording then
 		self.remainingLabel:setText("Remaining buffer: " .. (self.maxSeconds - (self.recordCountdownTimer.value/1000)))
+		self:updateAnimation()
 	end
 	
 	if self.scrubView:isPlaying() then self.scrubView:update() end
+end
+
+function RecordDialog:updatePost()
+	if self.recording then
+		self:updateAnimation()
+	end
 end
 
 function RecordDialog:isShowing()
@@ -192,20 +206,48 @@ function RecordDialog:dismiss()
 	playdate.inputHandlers.pop()
 	
 	for i=1,#sprites do
+		print("removin sprite: " .. tostring(sprites[i]))
 		sprites[i]:remove()
 	end
-	
+
 	self:remove()
 end
 
 function RecordDialog:addSprites(_sprites)
 	for i=1,#_sprites do
-		self:addSprite(sprites[i])
+		self:addSprite(_sprites[i])
 	end
 end
 
 function RecordDialog:addSprite(sprite)
 	table.insert(sprites, sprite)
+end
+
+local x = 0.0
+local y = -1.00
+local z = -1.00
+local ii = 0
+
+local frame = 0
+local change = 0
+
+local inputLevel = 1
+
+function RecordDialog:updateAnimation()
+	frame = frame + 1
+
+	z = -1.00
+	y = -1.00
+	
+	inputLevel = sound.micinput.getLevel() * 250
+
+	for i = 490, 1050, 1 do
+		ii = i*0.001
+		x = ii + sin(z*0.02) * 0.1
+		y = (1 + inputLevel) * cos(ii * y - 2)
+		z = 8 + y * sin(12 * ii + (frame*0.03)) * 25.0
+		playdate.graphics.drawPixel(-130 + 425 * x, map(70 + z+y, 0, 400, 60, 105))
+	end
 end
 
 -- See https://sdk.play.date/1.12.3/Inside%20Playdate.html#M-inputHandlers

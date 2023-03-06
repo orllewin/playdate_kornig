@@ -109,7 +109,7 @@ function ScrubView:crank(change)
 end
 
 function ScrubView:getSprites()
-	return {self.borderSprite, self.focusedSprite}
+	return {self.borderSprite, self.focusedSprite, self.caretSprite, self.startSprite, self.endSprite}
 end
 
 function ScrubView:isFocused()
