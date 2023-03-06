@@ -67,6 +67,10 @@ function Button:setActive(active)
 	end
 end
 
+function Button:isActive()
+	return self.active
+end
+
 function Button:setFocus(focus)
 	self.hasFocus = focus
 	self.focusedSprite:setVisible(focus)

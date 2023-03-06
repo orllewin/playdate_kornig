@@ -62,6 +62,7 @@ function RecordDialog:show(onSampleReady)
 		else
 			self.recordToggleButton:setText("Start Recording")
 			self.previewButton:setFocus(true)
+			self.saveButton:setActive(true)
 			self.recordToggleButton:setFocus(false)
 			sound.micinput.stopRecording()
 		end
@@ -74,11 +75,8 @@ function RecordDialog:show(onSampleReady)
 	
 	self.previewButton = Button("Preview", 358, 120, function() 
 		print("Playing sample...")
-		self.samplePlayer:setFinishCallback(function()
-			self.scrubView:stop()
-		end)
-		self.samplePlayer:play()
-		self.scrubView:play()
+		self:calculateSubsample()
+		self:playSubsample()
 	end)
 	self.previewButton:setActive(false)
 	self:addSprites(self.recordToggleButton:getSprites())
@@ -90,7 +88,10 @@ function RecordDialog:show(onSampleReady)
 	self:addSprites(self.cancelButton:getSprites())
 	
 	self.saveButton = Button("Save", 368, 215, function() 
-		--onSave
+		local finalSample = self:generateSubsample()
+		assert(finalSample ~= nil, "Error generating final subsample")
+		onSampleReady(finalSample)
+		self:dismiss()
 	end)
 	self.saveButton:setActive(false)
 	self:addSprites(self.saveButton:getSprites())
@@ -131,17 +132,33 @@ function RecordDialog:calculateSubsample()
 	local subsampleEnd = self.scrubView:getSubsampleEndMilliseconds()/1000
 	local endFrame = math.floor(subsampleEnd * sampleRate)
 	
-	assert(startFrame > 0, "Start frame is less than 0")
+	assert(startFrame >= 0, "Start frame is less than 0")
 	assert(startFrame < totalFrames, "Start frame is greater than total frames")
 	assert(endFrame > 0, "End frame is less than 0")
-	--assert(endFrame < totalFrames, "End frame is greater than total frames")
+	assert(endFrame <= totalFrames, "End frame is greater than total frames")
 	assert(startFrame < endFrame, "Start frame is greater than end frame")
-	print(self.buffer)
+
 	self.samplePlayer:setPlayRange(startFrame, endFrame)
+end
+
+function RecordDialog:generateSubsample()
+	local sampleRate = playdate.sound.getSampleRate()
+	local subsampleStart = self.scrubView:getSubsampleStartMilliseconds()/1000
+	local startFrame = math.floor(subsampleStart * sampleRate)
+	
+	local subsampleEnd = self.scrubView:getSubsampleEndMilliseconds()/1000
+	local endFrame = math.floor(subsampleEnd * sampleRate)
+	
+	local subsample = self.buffer:getSubsample(startFrame, endFrame)
+	assert(subsample ~= nil, "Error getting subsample")
+	return subsample
 end
 
 function RecordDialog:playSubsample()
 	print("Playing subsample...")
+	if self.samplePlayer:isPlaying() then
+		self.samplePlayer:stop()
+	end
 	self.samplePlayer:setFinishCallback(function()
 		self.scrubView:stop()
 	end)
@@ -214,7 +231,9 @@ function RecordDialog:getInputHandler()
 			end
 		end,
 		AButtonDown = function()
-			if self.scrubView:isFocused() then
+			if self.saveButton:isFocused() then
+				self.saveButton:tap()
+			elseif self.scrubView:isFocused() then
 				self.scrubView:setADown(true)
 			elseif self.recordToggleButton:isFocused() then
 				self.recordToggleButton:tap()
@@ -232,16 +251,31 @@ function RecordDialog:getInputHandler()
 			end
 		end,
 		leftButtonDown = function()
-			if self.previewButton:isFocused() then
+			if self.saveButton:isFocused() then
+				self.saveButton:setFocus(false)
+				self.cancelButton:setFocus(true)
+			elseif self.previewButton:isFocused() then
 				self.recordToggleButton:setFocus(true)
 				self.previewButton:setFocus(false)
+			elseif self.cancelButton:isFocused() then
+					self.recordToggleButton:setFocus(true)
+					self.cancelButton:setFocus(false)
 			end		
 		end,
 		rightButtonDown = function()
-
+			if self.recordToggleButton:isFocused() and self.previewButton:isActive() then
+				self.recordToggleButton:setFocus(false)
+				self.previewButton:setFocus(true)
+			elseif self.cancelButton:isFocused() and self.saveButton:isActive() then
+				self.saveButton:setFocus(true)
+				self.cancelButton:setFocus(false)
+			end
 		end,
 		upButtonDown = function()
-			if self.previewButton:isFocused() then
+			if self.saveButton:isFocused() then
+				self.saveButton:setFocus(false)
+				self.previewButton:setFocus(true)
+			elseif self.previewButton:isFocused() then
 				self.scrubView:setFocus(true)
 				self.previewButton:setFocus(false)
 			elseif self.cancelButton:isFocused() then
@@ -250,7 +284,10 @@ function RecordDialog:getInputHandler()
 			end	
 		end,
 		downButtonDown = function()
-			if self.scrubView:isFocused() then
+			if self.previewButton:isFocused() then
+				self.saveButton:setFocus(true)
+				self.previewButton:setFocus(false)
+			elseif self.scrubView:isFocused() then
 				self.scrubView:setFocus(false)
 				self.previewButton:setFocus(true)
 			elseif self.recordToggleButton:isFocused() then
