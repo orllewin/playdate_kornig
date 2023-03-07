@@ -18,6 +18,8 @@ local sound <const> = playdate.sound
 local sprites = {}
 local sin <const> = math.sin
 local cos <const> = math.cos
+local min <const> = math.min
+local max <const> = math.max
 
 local frame = 0
 
@@ -97,7 +99,8 @@ function RecordDialog:show(onSampleReady)
 	self.saveButton = Button("Save", 368, 215, function() 
 		local finalSample = self:generateSubsample()
 		assert(finalSample ~= nil, "Error generating final subsample")
-		onSampleReady(finalSample)
+		finalSample:save("recording.pda")
+		onSampleReady("recording.pda")
 		self:dismiss()
 	end)
 	self.saveButton:setActive(false)
@@ -234,7 +237,7 @@ local change = 0
 local inputLevel = 1
 
 function RecordDialog:updateAnimation()
-	frame = frame + 1
+	frame = frame + 2
 
 	z = -1.00
 	y = -1.00
@@ -244,9 +247,9 @@ function RecordDialog:updateAnimation()
 	for i = 490, 1050, 1 do
 		ii = i*0.001
 		x = ii + sin(z*0.02) * 0.1
-		y = (1 + inputLevel) * cos(ii * y - 2)
+		y = (2 + inputLevel) * cos(ii * y - 2)
 		z = 8 + y * sin(12 * ii + (frame*0.03)) * 25.0
-		playdate.graphics.drawPixel(-130 + 425 * x, map(70 + z+y, 0, 400, 60, 105))
+		playdate.graphics.drawPixel(-130 + 425 * x, max(42, min(105, map(123 + z+y, 0, 400, 40, 130))))
 	end
 end
 
