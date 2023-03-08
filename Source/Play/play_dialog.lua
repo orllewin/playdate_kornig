@@ -45,12 +45,13 @@ function PlayDialog:show(parentPath)
 	
 	self.control1 = GrainControl(1, function(index, value) 
 		-- onMove
-		print("GrainControl: " .. index .. " move: " .. value)
 		grainPlayer:move(index, value)
 	end, function(index, drift) 
 		-- onDrift
-		print("GrainControl: " .. index .. " drift: " .. drift)
 		grainPlayer:setDrift(index, drift)
+	end, function(index, width) 
+		-- onWidth
+		grainPlayer:setWidth(index, width)
 	end)
 	popManager:add(self.control1)
 	focusManager:addView(self.control1:getRow1View(), 1)
@@ -64,6 +65,9 @@ function PlayDialog:show(parentPath)
 		-- onDrift
 		print("GrainControl: " .. index .. " drift: " .. drift)
 		grainPlayer:setDrift(index, drift)
+	end, function(index, width) 
+		-- onWidth
+		grainPlayer:setWidth(index, width)
 	end)
 	popManager:add(self.control2)
 	focusManager:addView(self.control2:getRow1View(), 1)
@@ -77,6 +81,9 @@ function PlayDialog:show(parentPath)
 		-- onDrift
 		print("GrainControl: " .. index .. " drift: " .. drift)
 		grainPlayer:setDrift(index, drift)
+	end, function(index, width) 
+		-- onWidth
+		grainPlayer:setWidth(index, width)
 	end)
 	popManager:add(self.control3)
 	focusManager:addView(self.control3:getRow1View(), 1)
@@ -90,6 +97,9 @@ function PlayDialog:show(parentPath)
 		-- onDrift
 		print("GrainControl: " .. index .. " drift: " .. drift)
 		grainPlayer:setDrift(index, drift)
+	end, function(index, width) 
+		-- onWidth
+		grainPlayer:setWidth(index, width)
 	end)
 	popManager:add(self.control4)
 	focusManager:addView(self.control4:getRow1View(),1)
@@ -103,6 +113,9 @@ function PlayDialog:show(parentPath)
 		-- onDrift
 		print("GrainControl: " .. index .. " drift: " .. drift)
 		grainPlayer:setDrift(index, drift)
+	end, function(index, width) 
+		-- onWidth
+		grainPlayer:setWidth(index, width)
 	end)
 	popManager:add(self.control5)
 	focusManager:addView(self.control5:getRow1View(), 1)

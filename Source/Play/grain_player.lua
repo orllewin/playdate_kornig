@@ -111,7 +111,6 @@ function GrainPlayer:update()
 	if self.stopped then return end
 	if math.random(100) < 5 then
 		local index = math.random(childCount)
-		print("playing a grain..." .. index)
 		children[index].player:play()
 	end
 	
@@ -138,22 +137,48 @@ function GrainPlayer:frame(ms)
 end
 
 --  Children params:
+function GrainPlayer:setWidth(index, nWidth)
+	if #children == 0 then return end
+	print("Setting width: " .. index .. " amount: " .. nWidth)	
+	local maxWidthMs = pLengthMs/5
+	local widthMs = map(nWidth, 0.0, 1.0, 75, maxWidthMs)
+	
+	local config = children[index].config
+	local midpoint = config.midpoint
+	
+	if midpoint - widthMs/2 < 0 then
+		midpoint = widthMs/2
+	elseif midpoint + widthMs/2 > math.floor(pLengthMs) then
+		midpoint = math.floor(pLengthMs) - widthMs/2
+	end
+	
+	config.midpoint = midpoint
+	config.width = widthMs
+	config.head = midpoint - widthMs/2
+	config.tail = midpoint + widthMs/2
+	
+	local headFrame = self:frame(config.head)
+	local tailFrame = self:frame(config.tail)
+	local sample = pSample:getSubsample(headFrame, tailFrame)
+	
+	children[index].sample = sample
+	children[index].player:setSample(children[index].sample)
+	children[index].config = config
+	children[index].player:setRate(0.5)
+	if listener ~= nil then listener(index, config) end
+end
+
 function GrainPlayer:setDrift(index, driftAmount)
 	if #children == 0 then return end
-	print("Setting drift: " .. index .. " amount: " .. driftAmount)
 	children[index].config.driftAmount = driftAmount
-	print("Did set drift: " .. index .. " amount: " .. children[index].config.driftAmount)
 end
 
 function GrainPlayer:doDrift(index, driftAmount)
-	print("drifting index: " .. index .. " value: " .. driftAmount)
 	
 	local config = children[index].config
 	
 	local midpoint = config.midpoint += (driftAmount * 10)
 
-	
-	
 	local width = config.width
 	
 	--Ensure subsample is within sample range
@@ -161,7 +186,6 @@ function GrainPlayer:doDrift(index, driftAmount)
 		midpoint = math.floor(pLengthMs) - width/2
 	elseif midpoint + width/2 > math.floor(pLengthMs) then
 		midpoint = width/2
-		
 	end
 	
 	config.midpoint = midpoint
