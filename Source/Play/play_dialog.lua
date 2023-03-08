@@ -52,11 +52,15 @@ function PlayDialog:show(parentPath)
 	end, function(index, width) 
 		-- onWidth
 		grainPlayer:setWidth(index, width)
+	end, function(index, jumpActive) 
+		-- onJump
+		grainPlayer:setJump(index, jumpActive)
 	end)
 	popManager:add(self.control1)
 	focusManager:addView(self.control1:getRow1View(), 1)
 	focusManager:addView(self.control1:getRow2View(), 2)
 	focusManager:addView(self.control1:getRow3View(), 3)
+	focusManager:addView(self.control1:getRow4View(), 4)
 	
 	self.control2 = GrainControl(2, function(index, value) 
 			print("GrainControl: " .. index .. " percent: " .. value)
@@ -68,11 +72,15 @@ function PlayDialog:show(parentPath)
 	end, function(index, width) 
 		-- onWidth
 		grainPlayer:setWidth(index, width)
+	end, function(index, jumpActive) 
+		-- onJump
+		grainPlayer:setJump(index, jumpActive)
 	end)
 	popManager:add(self.control2)
 	focusManager:addView(self.control2:getRow1View(), 1)
 	focusManager:addView(self.control2:getRow2View(), 2)
 	focusManager:addView(self.control2:getRow3View(), 3)
+	focusManager:addView(self.control2:getRow4View(), 4)
 	
 	self.control3 = GrainControl(3, function(index, value) 
 			print("GrainControl: " .. index .. " percent: " .. value)
@@ -84,11 +92,15 @@ function PlayDialog:show(parentPath)
 	end, function(index, width) 
 		-- onWidth
 		grainPlayer:setWidth(index, width)
+	end, function(index, jumpActive) 
+		-- onJump
+		grainPlayer:setJump(index, jumpActive)
 	end)
 	popManager:add(self.control3)
 	focusManager:addView(self.control3:getRow1View(), 1)
 	focusManager:addView(self.control3:getRow2View(), 2)
 	focusManager:addView(self.control3:getRow3View(), 3)
+	focusManager:addView(self.control3:getRow4View(), 4)
 	
 	self.control4 = GrainControl(4, function(index, value) 
 			print("GrainControl: " .. index .. " percent: " .. value)
@@ -100,11 +112,15 @@ function PlayDialog:show(parentPath)
 	end, function(index, width) 
 		-- onWidth
 		grainPlayer:setWidth(index, width)
+	end, function(index, jumpActive) 
+		-- onJump
+		grainPlayer:setJump(index, jumpActive)
 	end)
 	popManager:add(self.control4)
 	focusManager:addView(self.control4:getRow1View(),1)
 	focusManager:addView(self.control4:getRow2View(), 2)
 	focusManager:addView(self.control4:getRow3View(), 3)
+	focusManager:addView(self.control4:getRow4View(), 4)
 	
 	self.control5 = GrainControl(5, function(index, value) 
 			print("GrainControl: " .. index .. " percent: " .. value)
@@ -116,21 +132,24 @@ function PlayDialog:show(parentPath)
 	end, function(index, width) 
 		-- onWidth
 		grainPlayer:setWidth(index, width)
+	end, function(index, jumpActive) 
+		-- onJump
+		grainPlayer:setJump(index, jumpActive)
 	end)
 	popManager:add(self.control5)
 	focusManager:addView(self.control5:getRow1View(), 1)
 	focusManager:addView(self.control5:getRow2View(), 2)
 	focusManager:addView(self.control5:getRow3View(), 3)
+	focusManager:addView(self.control5:getRow4View(), 4)
 	
 	focusManager:start()
 	
 	--Previous dialog hasn't popped yet, so wait:
-	playdate.timer.performAfterDelay(1500, function() 
+	playdate.timer.performAfterDelay(1000, function() 
 		focusManager:push()
 	end)
 	
 	grainPlayer:setListener(function(index, config)
-		print("View config changed, updating track view: " .. index .. " midPoint: " .. config.midpoint )
 		self.trackViews[index]:update(config)
 	end)
 	

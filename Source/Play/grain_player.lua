@@ -93,30 +93,36 @@ function GrainPlayer:getRandomSubsampleConfig()
 	
 	local subsampleStartMs = randomMidPointMs - (widthMs/2)
 	local subsampleStartFrame = self:frame(subsampleStartMs)
-	print("getRandomSubsampleConfig()2")
+
 	local subsampleEndMs = randomMidPointMs + (widthMs/2)
 	local subsampleEndFrame = self:frame(subsampleStartMs)
-	print("getRandomSubsampleConfig()3 - returning")
+
 	return {
 		midpoint = randomMidPointMs,
 		width = widthMs,
 		head = subsampleStartMs,
 		tail = subsampleEndMs,
 		parentLength = pLengthMs,
-		driftAmount = 0
+		driftAmount = 0,
+		jump = false
 	}
 end
 
 function GrainPlayer:update()
 	if self.stopped then return end
+	
+	
 	if math.random(100) < 5 then
 		local index = math.random(childCount)
 		children[index].player:play()
 	end
 	
 	for i=1,#children do
+		if math.random(100) < 3 and children[i].config.jump then
+			self:doJump(i)
+		end
+		
 		local driftAmount = children[i].config.driftAmount
-		--print("drifTAmount: " .. driftAmount)
 		if driftAmount < -0.1 or driftAmount > 0.1 then
 			self:doDrift(i, driftAmount)
 		end
@@ -137,9 +143,13 @@ function GrainPlayer:frame(ms)
 end
 
 --  Children params:
+function GrainPlayer:setJump(index, jumpActive)
+	if #children == 0 then return end
+	children[index].config.jump = jumpActive
+end
 function GrainPlayer:setWidth(index, nWidth)
 	if #children == 0 then return end
-	print("Setting width: " .. index .. " amount: " .. nWidth)	
+
 	local maxWidthMs = pLengthMs/5
 	local widthMs = map(nWidth, 0.0, 1.0, 75, maxWidthMs)
 	
@@ -172,6 +182,41 @@ function GrainPlayer:setDrift(index, driftAmount)
 	if #children == 0 then return end
 	children[index].config.driftAmount = driftAmount
 end
+
+function GrainPlayer:doJump(index)
+	local config = children[index].config
+	
+	local randomMidPointMs = math.random(math.floor(pLengthMs))
+	config.midpoint = randomMidPointMs
+	
+	local widthMs = config.width
+	
+	--Ensure subsample is within sample range
+	if randomMidPointMs - widthMs/2 < 0 then
+		randomMidPointMs = widthMs/2
+	elseif randomMidPointMs + widthMs/2 > math.floor(pLengthMs) then
+		randomMidPointMs = math.floor(pLengthMs) - widthMs/2
+	end
+	
+	local subsampleStartMs = randomMidPointMs - (widthMs/2)
+	config.head = subsampleStartMs
+	local headFrame = self:frame(subsampleStartMs)
+
+	local subsampleEndMs = randomMidPointMs + (widthMs/2)
+	config.tail = subsampleEndMs
+	local tailFrame = self:frame(subsampleEndMs)
+
+	local sample = pSample:getSubsample(headFrame, tailFrame)
+	
+	children[index].sample = sample
+	children[index].player:setSample(children[index].sample)
+	children[index].config = config
+	children[index].player:setRate(0.5)
+	if listener ~= nil then listener(index, config) end
+
+
+end
+
 
 function GrainPlayer:doDrift(index, driftAmount)
 	

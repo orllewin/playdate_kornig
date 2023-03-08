@@ -92,6 +92,10 @@ function FocusManager:getInputHandler()
 			local focused = self:getFocusedView()
 			if focused.turn ~= nil then focused:turn(change) end
 		end,
+		AButtonDown = function()
+			local focused = self:getFocusedView()
+			if focused.tap ~= nil then focused:tap() end
+		end,
 		leftButtonDown = function()
 			if(self.activeIndex > 1) then
 				self:getFocusedView():setFocus(false)
