@@ -52,17 +52,16 @@ function RecordDialog:show(onSampleReady)
 	self:add()
 	
 	graphics.setImageDrawMode(graphics.kDrawModeFillBlack)
-	self.levelLabel = LabelLeft("", 4, 4, 1.0)
-	self:addSprite(self.levelLabel)
-	self.titleLabel = LabelCentre("Record Sample", 200, 4, 1.0)
+
+	self.titleLabel = LabelLeft("Record Sample", 6, 12)
 	self:addSprite(self.titleLabel)
-	self.sourceLabel = LabelRight("Source: " .. sound.micinput.getSource(), 396, 4, 1.0)
-	self:addSprite(self.sourceLabel)
+	self.div = DividerHorizontal(6, 42, 388, 0.2)
 	
-	self.scrubView = ScrubView(40)
+	
+	self.scrubView = ScrubView(52)
 	self:addSprites(self.scrubView:getSprites())
 	
-	self.recordToggleButton = Button("Start Recording", 74, 120, function() 
+	self.recordToggleButton = Button("Start Recording", 82, 137, function() 
 		self.recording = not self.recording
 		if self.recording then
 			self.recordToggleButton:setText("Stop Recording")
@@ -79,10 +78,16 @@ function RecordDialog:show(onSampleReady)
 	self:addSprites(self.recordToggleButton:getSprites())
 	
 	
-	self.remainingLabel = LabelLeft("Remaining buffer: " .. self.maxSeconds, 6, 150, 0.2)
+	self.remainingLabel = LabelLeft("Remaining buffer: " .. self.maxSeconds, 8, 165, 0.2)
 	self:addSprite(self.remainingLabel)
 	
-	self.previewButton = Button("Preview", 358, 120, function() 
+	self.levelLabel = LabelLeft("", 8, 190, 1.0)
+	self:addSprite(self.levelLabel)
+	
+	self.sourceLabel = LabelLeft("Source: " .. sound.micinput.getSource(), 8, 215, 1.0)
+	self:addSprite(self.sourceLabel)
+	
+	self.previewButton = Button("Preview", 355, 137, function() 
 		print("Playing sample...")
 		self:calculateSubsample()
 		self:playSubsample()
@@ -90,13 +95,13 @@ function RecordDialog:show(onSampleReady)
 	self.previewButton:setActive(false)
 	self:addSprites(self.previewButton:getSprites())
 	
-	self.cancelButton = Button("Cancel", 302, 215, function() 
+	self.cancelButton = Button("Cancel", 294, 215, function() 
 		self.onSampleReady(nil)
 		self:dismiss()
 	end)
 	self:addSprites(self.cancelButton:getSprites())
 	
-	self.saveButton = Button("Save", 368, 215, function() 
+	self.saveButton = Button("Save", 366, 215, function() 
 		local finalSample = self:generateSubsample()
 		assert(finalSample ~= nil, "Error generating final subsample")
 		finalSample:save("recording.pda")
@@ -236,6 +241,8 @@ local change = 0
 
 local inputLevel = 1
 
+local lx = 5
+
 function RecordDialog:updateAnimation()
 	frame = frame + 2
 
@@ -243,14 +250,19 @@ function RecordDialog:updateAnimation()
 	y = -1.00
 	
 	inputLevel = sound.micinput.getLevel() * 250
+	
+	playdate.graphics.drawCircleAtPoint(200, 88, 5 * inputLevel) 
+	lx = math.max(5, math.floor(10 * inputLevel))
+	playdate.graphics.drawLine(lx, 55, lx, 120)
+	playdate.graphics.drawLine(400 - lx, 55, 400 - lx, 120)
 
-	for i = 490, 1050, 1 do
-		ii = i*0.001
-		x = ii + sin(z*0.02) * 0.1
-		y = (2 + inputLevel) * cos(ii * y - 2)
-		z = 8 + y * sin(12 * ii + (frame*0.03)) * 25.0
-		playdate.graphics.drawPixel(-130 + 425 * x, max(42, min(105, map(123 + z+y, 0, 400, 40, 130))))
-	end
+	-- for i = 490, 1050, 4 do
+	-- 	ii = i*0.001
+	-- 	x = ii + sin(z*0.02) * 0.1
+	-- 	y = (2 + inputLevel) * cos(ii * y - 2)
+	-- 	z = 8 + y * sin(12 * ii + (frame*0.03)) * 25.0
+	-- 	playdate.graphics.drawPixel(-130 + 425 * x, max(42, min(105, map(123 + z+y, 0, 400, 40, 130))))
+	-- end
 end
 
 -- See https://sdk.play.date/1.12.3/Inside%20Playdate.html#M-inputHandlers

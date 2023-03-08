@@ -32,6 +32,8 @@ local pLengthMs = -1
 
 local sampleRate = sound.getSampleRate()
 
+local listener = nil
+
 local childCount = 5
 local children = {}
 
@@ -39,11 +41,15 @@ function GrainPlayer:init()
 	GrainPlayer.super.init(self)
 end
 
-function GrainPlayer:initialise(samplePath)
+function GrainPlayer:initialise(samplePath, onReady)
 	print("loading parent sample from path.." .. samplePath)
 	pSample:load(samplePath)
 	pPlayer:setSample(pSample)
 	pLengthMs = pSample:getLength() * 1000
+	
+	local configs = {}
+	
+	self.stopped = false
 	
 	for i=1,childCount do 
 		print("adding child " .. i)
@@ -65,15 +71,17 @@ function GrainPlayer:initialise(samplePath)
 			player = player
 		}
 		children[i] = grainSample
+		configs[i] = config
 		print("Child " .. i .. " added")
 	end
 	
+	onReady(configs)
 	print("grain player ready")
 end
 
 function GrainPlayer:getRandomSubsampleConfig()
 	local randomMidPointMs = math.random(math.floor(pLengthMs))
-	local maxWidthMs = pLengthMs/10
+	local maxWidthMs = pLengthMs/5
 	local widthMs = math.random(math.floor(maxWidthMs))
 	
 	--Ensure subsample is within sample range
@@ -93,16 +101,32 @@ function GrainPlayer:getRandomSubsampleConfig()
 		midpoint = randomMidPointMs,
 		width = widthMs,
 		head = subsampleStartMs,
-		tail = subsampleEndMs
+		tail = subsampleEndMs,
+		parentLength = pLengthMs,
+		driftAmount = 0
 	}
 end
 
 function GrainPlayer:update()
+	if self.stopped then return end
 	if math.random(100) < 5 then
 		local index = math.random(childCount)
 		print("playing a grain..." .. index)
 		children[index].player:play()
 	end
+	
+	for i=1,#children do
+		local driftAmount = children[i].config.driftAmount
+		--print("drifTAmount: " .. driftAmount)
+		if driftAmount < -0.1 or driftAmount > 0.1 then
+			self:doDrift(i, driftAmount)
+		end
+	end
+	
+end
+
+function GrainPlayer:stop()
+	self.stopped = true
 end
 
 function GrainPlayer:children()
@@ -114,11 +138,59 @@ function GrainPlayer:frame(ms)
 end
 
 --  Children params:
+function GrainPlayer:setDrift(index, driftAmount)
+	if #children == 0 then return end
+	print("Setting drift: " .. index .. " amount: " .. driftAmount)
+	children[index].config.driftAmount = driftAmount
+	print("Did set drift: " .. index .. " amount: " .. children[index].config.driftAmount)
+end
+
+function GrainPlayer:doDrift(index, driftAmount)
+	print("drifting index: " .. index .. " value: " .. driftAmount)
+	
+	local config = children[index].config
+	
+	local midpoint = config.midpoint += (driftAmount * 10)
+
+	
+	
+	local width = config.width
+	
+	--Ensure subsample is within sample range
+	if midpoint - width/2 < 0 then
+		midpoint = math.floor(pLengthMs) - width/2
+	elseif midpoint + width/2 > math.floor(pLengthMs) then
+		midpoint = width/2
+		
+	end
+	
+	config.midpoint = midpoint
+	
+	local subsampleStartMs = midpoint - (width/2)
+	local subsampleEndMs = midpoint + (width/2)
+	
+	config.head = subsampleStartMs
+	config.tail = subsampleEndMs
+	
+	local headFrame = self:frame(subsampleStartMs)
+	local tailFrame = self:frame(subsampleEndMs)
+	local sample = pSample:getSubsample(headFrame, tailFrame)
+	
+	children[index].sample = sample
+	children[index].player:setSample(children[index].sample)
+	children[index].config = config
+	children[index].player:setRate(0.5)
+	if listener ~= nil then listener(index, config) end
+end
+
 function GrainPlayer:move(index, value)
+	print("moving index: " .. index .. " value: " .. value)
 	
 	local midpoint = map(value, 0, 100, 0, pLengthMs)
 
-	local width = children[index].config.width
+	local config = children[index].config
+	
+	local width = config.width
 	
 	--Ensure subsample is within sample range
 	if midpoint - width/2 < 0 then
@@ -127,13 +199,13 @@ function GrainPlayer:move(index, value)
 		midpoint = math.floor(pLengthMs) - width/2
 	end
 	
-	children[index].config.midPoint = midpoint
+	config.midpoint = midpoint
 	
 	local subsampleStartMs = midpoint - (width/2)
 	local subsampleEndMs = midpoint + (width/2)
 	
-	children[index].config.head = subsampleStartMs
-	children[index].config.tail = subsampleEndMs
+	config.head = subsampleStartMs
+	config.tail = subsampleEndMs
 	
 	local headFrame = self:frame(subsampleStartMs)
 	local tailFrame = self:frame(subsampleEndMs)
@@ -141,4 +213,11 @@ function GrainPlayer:move(index, value)
 	
 	children[index].sample = sample
 	children[index].player:setSample(children[index].sample)
+	children[index].config = config
+	children[index].player:setRate(0.5)
+	if listener ~= nil then listener(index, config) end
+end
+
+function GrainPlayer:setListener(_listener)
+	listener = _listener
 end

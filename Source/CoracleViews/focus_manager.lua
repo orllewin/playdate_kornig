@@ -72,7 +72,6 @@ function FocusManager:tapFocusedView()
 end
 
 function FocusManager:push() 
-	print("FocusManager push inputHandler")
 	playdate.inputHandlers.push(self:getInputHandler())
 	self.handlingInput = true
 end
@@ -90,7 +89,6 @@ end
 function FocusManager:getInputHandler()
 	return {
 		cranked = function(change, acceleratedChange)
-			print("cha cha changes'; " .. change)
 			local focused = self:getFocusedView()
 			if focused.turn ~= nil then focused:turn(change) end
 		end,
