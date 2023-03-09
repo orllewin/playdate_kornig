@@ -45,7 +45,7 @@ function PlayDialog:show(parentPath, onShowSettings)
 	self.trackViews = {self.trackView1, self.trackView2, self.trackView3, self.trackView4, self.trackView5}
 	
 	self.settingsButton = ButtonMinimal("Global", 370, 4,  60, 10, function()
-		self.onShowSettings()
+		self.onShowSettings(grainPlayer:getNormalisedTempo())
 	end)
 	focusManager:addView(self.settingsButton, 1)
 	

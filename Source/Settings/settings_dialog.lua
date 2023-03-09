@@ -21,7 +21,7 @@ function SettingsDialog:init()
 	self.showing = false
 end
 
-function SettingsDialog:show(onTempoChange, onRateChange)	
+function SettingsDialog:show(normalisedTempo, onTempoChange, onRateChange)	
 	
 	self.focusManager = FocusManager()
 	
@@ -42,6 +42,7 @@ function SettingsDialog:show(onTempoChange, onRateChange)
 	self.tempoKnob = RotaryEncoder("Tempo", 342, 23, 100, function(value) 
 		if self.onTempoChange ~= nil then self.onTempoChange(value) end
 	end)
+	self.tempoKnob:setValue(normalisedTempo)
 	self.focusManager:addView(self.tempoKnob, 1)
 	
 	self.rate0_1Button = ButtonMinimal("Rate: 0.125", 342, 50, 108, 12, function()

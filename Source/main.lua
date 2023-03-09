@@ -51,8 +51,8 @@ local cachePath = "recording.pda"
 if playdate.file.exists(cachePath) then
 	playDialog = PlayDialog()
 	print("Showing play dialog")
-	playDialog:show(cachePath, function()
-			showSettings()
+	playDialog:show(cachePath, function(normalisedTempo)
+			showSettings(normalisedTempo)
 	end)
 else
 	MainOptionDialog():show(function(option) 
@@ -65,9 +65,9 @@ else
 	end)
 end
 
-function showSettings()
+function showSettings(normalisedTempo)
 	local settingsDialog = SettingsDialog()
-	settingsDialog:show(function(tempo) 
+	settingsDialog:show(normalisedTempo, function(tempo) 
 		-- onTempoChange 0.0 to 1.0
 		print("onTempoChange: " .. tempo)
 		if playDialog ~= nil and playDialog:isShowing() then playDialog:changeTempo(tempo) end
@@ -89,7 +89,7 @@ function showRecordDialog()
 			-- set up everything
 			playDialog = PlayDialog()
 			print("Showing play dialog", function()
-				showSettings()
+				showSettings(0.5)
 			end)
 			playDialog:show(parentPath)
 		end
