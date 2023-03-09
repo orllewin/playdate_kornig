@@ -53,7 +53,9 @@ local cachePath = "recording.pda"
 if playdate.file.exists(cachePath) then
 	playDialog = PlayDialog()
 	print("Showing play dialog")
-	playDialog:show(cachePath)
+	playDialog:show(cachePath, function()
+			showSettings()
+	end)
 else
 	MainOptionDialog():show(function(option) 
 		if option == "record" then
@@ -74,6 +76,7 @@ function showSettings()
 	end, function(rate) 
 		-- onRateChange
 		print("onRateChange: " .. rate)
+		if playDialog ~= nil and playDialog:isShowing() then playDialog:changeRate(rate) end
 	end)
 end
 
@@ -87,7 +90,9 @@ function showRecordDialog()
 		else
 			-- set up everything
 			playDialog = PlayDialog()
-			print("Showing play dialog")
+			print("Showing play dialog", function()
+				showSettings()
+			end)
 			playDialog:show(parentPath)
 		end
 	end)

@@ -4,8 +4,7 @@ import 'Play/track_view'
 import 'CoracleViews/focus_manager'
 import 'CoracleViews/pop_manager'
 import 'CoracleViews/divider_horizontal'
-import 'CoracleViews/mini_slider'
-
+import 'CoracleViews/button_minimal'
 
 class('PlayDialog').extends(playdate.graphics.sprite)
 
@@ -22,10 +21,11 @@ function PlayDialog:init()
 	playdate.graphics.setFont(font)
 end
 
-function PlayDialog:show(parentPath)
+function PlayDialog:show(parentPath, onShowSettings)
 	print("Play diualog initialising graimPlayer")
 	
-
+	self.onShowSettings = onShowSettings
+	
 	local background = graphics.image.new(400, 240, graphics.kColorWhite)
 	self:moveTo(200, 120)
 	self:setImage(background)
@@ -35,13 +35,18 @@ function PlayDialog:show(parentPath)
 	--popManager:add(self.topDiv)
 	graphics.setImageDrawMode(graphics.kDrawModeFillBlack)
 	graphics.setColor(graphics.kColorBlack)
-	self.trackView1 = TrackView(7)
-	self.trackView2 = TrackView(21)
-	self.trackView3 = TrackView(35)
-	self.trackView4 = TrackView(49)
-	self.trackView5 = TrackView(63)
+	self.trackView1 = TrackView(22)
+	self.trackView2 = TrackView(33)
+	self.trackView3 = TrackView(44)
+	self.trackView4 = TrackView(55)
+	self.trackView5 = TrackView(66)
 	
 	self.trackViews = {self.trackView1, self.trackView2, self.trackView3, self.trackView4, self.trackView5}
+	
+	self.settingsButton = ButtonMinimal("Global", 370, 4,  60, 10, function()
+		self.onShowSettings()
+	end)
+	focusManager:addView(self.settingsButton, 1)
 	
 	self.control1 = GrainControl(1, function(index, value) 
 		-- onMove
@@ -60,12 +65,12 @@ function PlayDialog:show(parentPath)
 		grainPlayer:setReverse(index, reverseActive)
 	end)
 	popManager:add(self.control1)
-	focusManager:addView(self.control1:getRow1View(), 1)
-	focusManager:addView(self.control1:getRow2View(), 2)
-	focusManager:addView(self.control1:getRow3View(), 3)
-	focusManager:addView(self.control1:getRow4View(), 4)
-	focusManager:addView(self.control1:getRow5View(), 5)
-	focusManager:addView(self.control1:getRow6View(), 6)
+	focusManager:addView(self.control1:getRow1View(), 2)
+	focusManager:addView(self.control1:getRow2View(), 3)
+	focusManager:addView(self.control1:getRow3View(), 4)
+	focusManager:addView(self.control1:getRow4View(), 5)
+	focusManager:addView(self.control1:getRow5View(), 6)
+	focusManager:addView(self.control1:getRow6View(), 7)
 	
 	self.control2 = GrainControl(2, function(index, value) 
 			print("GrainControl: " .. index .. " percent: " .. value)
@@ -85,12 +90,12 @@ function PlayDialog:show(parentPath)
 		grainPlayer:setReverse(index, reverseActive)
 	end)
 	popManager:add(self.control2)
-	focusManager:addView(self.control2:getRow1View(), 1)
-	focusManager:addView(self.control2:getRow2View(), 2)
-	focusManager:addView(self.control2:getRow3View(), 3)
-	focusManager:addView(self.control2:getRow4View(), 4)
-	focusManager:addView(self.control2:getRow5View(), 5)
-	focusManager:addView(self.control2:getRow6View(), 6)
+	focusManager:addView(self.control2:getRow1View(), 2)
+	focusManager:addView(self.control2:getRow2View(), 3)
+	focusManager:addView(self.control2:getRow3View(), 4)
+	focusManager:addView(self.control2:getRow4View(), 5)
+	focusManager:addView(self.control2:getRow5View(), 6)
+	focusManager:addView(self.control2:getRow6View(), 7)
 	
 	self.control3 = GrainControl(3, function(index, value) 
 			print("GrainControl: " .. index .. " percent: " .. value)
@@ -110,12 +115,12 @@ function PlayDialog:show(parentPath)
 		grainPlayer:setReverse(index, reverseActive)
 	end)
 	popManager:add(self.control3)
-	focusManager:addView(self.control3:getRow1View(), 1)
-	focusManager:addView(self.control3:getRow2View(), 2)
-	focusManager:addView(self.control3:getRow3View(), 3)
-	focusManager:addView(self.control3:getRow4View(), 4)
-	focusManager:addView(self.control3:getRow5View(), 5)
-	focusManager:addView(self.control3:getRow6View(), 6)
+	focusManager:addView(self.control3:getRow1View(), 2)
+	focusManager:addView(self.control3:getRow2View(), 3)
+	focusManager:addView(self.control3:getRow3View(), 4)
+	focusManager:addView(self.control3:getRow4View(), 5)
+	focusManager:addView(self.control3:getRow5View(), 6)
+	focusManager:addView(self.control3:getRow6View(), 7)
 	
 	self.control4 = GrainControl(4, function(index, value) 
 			print("GrainControl: " .. index .. " percent: " .. value)
@@ -135,12 +140,12 @@ function PlayDialog:show(parentPath)
 		grainPlayer:setReverse(index, reverseActive)
 	end)
 	popManager:add(self.control4)
-	focusManager:addView(self.control4:getRow1View(),1)
-	focusManager:addView(self.control4:getRow2View(), 2)
-	focusManager:addView(self.control4:getRow3View(), 3)
-	focusManager:addView(self.control4:getRow4View(), 4)
-	focusManager:addView(self.control4:getRow5View(), 5)
-	focusManager:addView(self.control4:getRow6View(), 6)
+	focusManager:addView(self.control4:getRow1View(), 2)
+	focusManager:addView(self.control4:getRow2View(), 3)
+	focusManager:addView(self.control4:getRow3View(), 4)
+	focusManager:addView(self.control4:getRow4View(), 5)
+	focusManager:addView(self.control4:getRow5View(), 6)
+	focusManager:addView(self.control4:getRow6View(), 7)
 	
 	self.control5 = GrainControl(5, function(index, value) 
 			print("GrainControl: " .. index .. " percent: " .. value)
@@ -160,12 +165,12 @@ function PlayDialog:show(parentPath)
 		grainPlayer:setReverse(index, reverseActive)
 	end)
 	popManager:add(self.control5)
-	focusManager:addView(self.control5:getRow1View(), 1)
-	focusManager:addView(self.control5:getRow2View(), 2)
-	focusManager:addView(self.control5:getRow3View(), 3)
-	focusManager:addView(self.control5:getRow4View(), 4)
-	focusManager:addView(self.control5:getRow5View(), 5)
-	focusManager:addView(self.control5:getRow6View(), 6)
+	focusManager:addView(self.control5:getRow1View(), 2)
+	focusManager:addView(self.control5:getRow2View(), 3)
+	focusManager:addView(self.control5:getRow3View(), 4)
+	focusManager:addView(self.control5:getRow4View(), 5)
+	focusManager:addView(self.control5:getRow5View(), 6)
+	focusManager:addView(self.control5:getRow6View(), 7)
 	
 	focusManager:start()
 	
@@ -192,6 +197,10 @@ end
 
 function PlayDialog:changeTempo(tempo)
 	grainPlayer:changeTempo(tempo)
+end
+
+function PlayDialog:changeRate(rate)
+	grainPlayer:changeRate(rate)
 end
 
 function PlayDialog:stop()

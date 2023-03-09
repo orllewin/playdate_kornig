@@ -149,6 +149,10 @@ function GrainPlayer:changeTempo(tempo)
 	playChance = map(tempo, 0.0, 1.0, 1, 10)
 end
 
+function GrainPlayer:changeRate(_rate)
+	rate = _rate
+end
+
 function GrainPlayer:stop()
 	self.stopped = true
 end

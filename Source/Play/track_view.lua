@@ -8,7 +8,7 @@ import 'CoracleViews/divider_vertical'
 
 class('TrackView').extends()
 
-local trackheight = 14
+local trackheight = 11
 local margin = 5
  
 function TrackView:init(yy)

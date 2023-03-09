@@ -43,6 +43,12 @@ function RotaryEncoder:init(label, xx, yy, w, listener)
 
 end
 
+function RotaryEncoder:removeAll()
+	self.label:remove()
+	self.focusedSprite:remove()
+	self:remove()
+end
+
 function RotaryEncoder:turn(degrees)
 	if(degrees == 0.0)then return end --indicates no change from crank in this frame
 	self:setRotation(math.max(0, (math.min(300, self:getRotation() + degrees))))

@@ -3,6 +3,7 @@
 	
 --]]
 
+import 'CoracleViews/focus_manager'
 import 'CoracleViews/label_left'
 import 'CoracleViews/label_centre'
 import 'CoracleViews/label_right'
@@ -22,78 +23,65 @@ end
 
 function SettingsDialog:show(onTempoChange, onRateChange)	
 	
+	self.focusManager = FocusManager()
+	
 	self.onTempoChange = onTempoChange
 	self.onRateChange = onRateChange
 	
+	local dH = 162
 	self.showing = true
-	local background = graphics.image.new(300, 140, graphics.kColorWhite)
+	local background = graphics.image.new(120, dH, graphics.kColorWhite)
 	playdate.graphics.pushContext(background)
 	playdate.graphics.setColor(playdate.graphics.kColorBlack)
-	playdate.graphics.drawRoundRect(0, 0, 300, 140, 3)
+	playdate.graphics.drawRoundRect(0, 0, 120, dH, 3)
 	playdate.graphics.popContext()
-	self:moveTo(200, 120)
+	self:moveTo(340, dH/2)
 	self:setImage(background)
 	self:add()
 	
-	self.tempoKnob = RotaryEncoder("Tempo", 200, 100, 100, function(value) 
+	self.tempoKnob = RotaryEncoder("Tempo", 342, 23, 100, function(value) 
 		if self.onTempoChange ~= nil then self.onTempoChange(value) end
 	end)
-	self.tempoKnob:setFocus(true)
+	self.focusManager:addView(self.tempoKnob, 1)
 	
-	self.dismissButton = ButtonMinimal("Done", 303, 170, 80, 12, function()
+	self.rate0_1Button = ButtonMinimal("Rate: 0.125", 342, 50, 108, 12, function()
+		if self.onRateChange ~= nil then self.onRateChange(0.125) end
+	end)
+	self.focusManager:addView(self.rate0_1Button, 2)
+	
+	self.rate0_25Button = ButtonMinimal("Rate: 0.25", 342, 73, 108, 12, function()
+		if self.onRateChange ~= nil then self.onRateChange(0.25) end
+	end)
+	self.focusManager:addView(self.rate0_25Button, 3)
+	
+	self.rate0_5Button = ButtonMinimal("Rate: 0.5", 342, 96, 108, 12, function()
+		if self.onRateChange ~= nil then self.onRateChange(0.5) end
+	end)
+	self.focusManager:addView(self.rate0_5Button, 4)
+	
+	self.rate1Button = ButtonMinimal("Rate: 1.0", 342, 119, 108, 12, function()
+		if self.onRateChange ~= nil then self.onRateChange(1.0) end
+	end)
+	self.focusManager:addView(self.rate1Button, 5)
+	
+	self.dismissButton = ButtonMinimal("Done", 342, 142, 108, 12, function()
 		--dismiss
 		self:pop()
 	end)
+	self.focusManager:addView(self.dismissButton, 6)
 	
-	
-	
-	playdate.inputHandlers.push(self:getInputHandler())
-	
+	self.focusManager:push() 
+	self.focusManager:start()
+		
 end
 
 function SettingsDialog:pop()
-	playdate.inputHandlers.pop()
+	self.focusManager:pop() 
+	self.tempoKnob :removeAll()
+	self.rate0_1Button:removeAll()
+	self.rate0_25Button:removeAll()
+	self.rate0_5Button:removeAll()
+	self.rate1Button:removeAll()
 	self.dismissButton:removeAll()
 	self:remove()
 end
-
--- See https://sdk.play.date/1.12.3/Inside%20Playdate.html#M-inputHandlers
-function SettingsDialog:getInputHandler()
-	return {
-		cranked = function(change, acceleratedChange)
-			if self.tempoKnob:isFocused() then
-				self.tempoKnob:turn(change)
-			end
-		end,
-		BButtonDown = function()
-			
-		end,
-		BButtonUp = function()
-			
-		end,
-		AButtonDown = function()
-			if self.dismissButton:isFocused() then
-				self.dismissButton:tap()
-			end
-		end,
-		AButtonUp = function()
-			
-		end,
-		leftButtonDown = function()
-			
-		end,
-		rightButtonDown = function()
-		
-		end,
-		upButtonDown = function()
-		
-		end,
-		downButtonDown = function()
-			if self.tempoKnob then
-				self.dismissButton:setFocus(true)
-				self.tempoKnob:setFocus(false)
-			end
-		end
-	}
-end
-	
