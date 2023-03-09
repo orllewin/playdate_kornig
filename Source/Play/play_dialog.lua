@@ -5,6 +5,7 @@ import 'CoracleViews/focus_manager'
 import 'CoracleViews/pop_manager'
 import 'CoracleViews/divider_horizontal'
 import 'CoracleViews/button_minimal'
+import 'Play/track_popup'
 
 class('PlayDialog').extends(playdate.graphics.sprite)
 
@@ -63,6 +64,31 @@ function PlayDialog:show(parentPath, onShowSettings)
 	end, function(index, reverseActive) 
 		-- onReverse
 		grainPlayer:setReverse(index, reverseActive)
+	end, function(_index)
+		print("SHOW FX")
+		-- onFx
+		local trackPopup = TrackPopup()
+		trackPopup:show(_index, 38, function(index, value)
+				-- onDelayLevel
+				print("Delay level: " .. index .. " level: ".. value)
+				grainPlayer:setDelayLevel(index, value)
+			end, function(index, value)
+				-- onDelayFeedback
+				print("Delay feedback: " .. index .. " level: ".. value)
+				grainPlayer:setDelayFeedback(index, value)
+			end, function(index, lowActive)
+				-- onLoActive
+				print("Low filter active: " .. index .. " active: ".. tostring(lowActive))
+				grainPlayer:setLoActive(index, lowActive)
+			end, function(index, value)
+				-- onLoFreq
+				print("Lo freq: " .. index .. " freq: ".. value)
+				grainPlayer:setLoFreq(index, value)
+			end, function(index, value)
+				-- onLoRes
+				print("Lo res: " .. index .. " res: ".. value)
+				grainPlayer:setLoRes(index, value)
+			end)
 	end)
 	popManager:add(self.control1)
 	focusManager:addView(self.control1:getRow1View(), 2)
@@ -88,6 +114,31 @@ function PlayDialog:show(parentPath, onShowSettings)
 	end, function(index, reverseActive) 
 		-- onReverse
 		grainPlayer:setReverse(index, reverseActive)
+	end, function(_index)
+		print("SHOW FX")
+		-- onFx
+		local trackPopup = TrackPopup()
+		trackPopup:show(_index, 38 + 80, function(index, value)
+				-- onDelayLevel
+				print("Delay level: " .. index .. " level: ".. value)
+				grainPlayer:setDelayLevel(index, value)
+			end, function(index, value)
+				-- onDelayFeedback
+				print("Delay feedback: " .. index .. " level: ".. value)
+				grainPlayer:setDelayFeedback(index, value)
+			end, function(index, lowActive)
+				-- onLoActive
+				print("Low filter active: " .. index .. " active: ".. tostring(lowActive))
+				grainPlayer:setLoActive(index, lowActive)
+			end, function(index, value)
+				-- onLoFreq
+				print("Lo freq: " .. index .. " freq: ".. value)
+				grainPlayer:setLoFreq(index, value)
+			end, function(index, value)
+				-- onLoRes
+				print("Lo res: " .. index .. " res: ".. value)
+				grainPlayer:setLoRes(index, value)
+			end)
 	end)
 	popManager:add(self.control2)
 	focusManager:addView(self.control2:getRow1View(), 2)
@@ -113,6 +164,31 @@ function PlayDialog:show(parentPath, onShowSettings)
 	end, function(index, reverseActive) 
 		-- onReverse
 		grainPlayer:setReverse(index, reverseActive)
+	end, function(_index)
+		print("SHOW FX")
+		-- onFx
+		local trackPopup = TrackPopup()
+		trackPopup:show(_index, 38 + 160, function(index, value)
+				-- onDelayLevel
+				print("Delay level: " .. index .. " level: ".. value)
+				grainPlayer:setDelayLevel(index, value)
+			end, function(index, value)
+				-- onDelayFeedback
+				print("Delay feedback: " .. index .. " level: ".. value)
+				grainPlayer:setDelayFeedback(index, value)
+			end, function(index, lowActive)
+				-- onLoActive
+				print("Low filter active: " .. index .. " active: ".. tostring(lowActive))
+				grainPlayer:setLoActive(index, lowActive)
+			end, function(index, value)
+				-- onLoFreq
+				print("Lo freq: " .. index .. " freq: ".. value)
+				grainPlayer:setLoFreq(index, value)
+			end, function(index, value)
+				-- onLoRes
+				print("Lo res: " .. index .. " res: ".. value)
+				grainPlayer:setLoRes(index, value)
+			end)
 	end)
 	popManager:add(self.control3)
 	focusManager:addView(self.control3:getRow1View(), 2)
@@ -138,6 +214,31 @@ function PlayDialog:show(parentPath, onShowSettings)
 	end, function(index, reverseActive) 
 		-- onReverse
 		grainPlayer:setReverse(index, reverseActive)
+	end, function(_index)
+		print("SHOW FX")
+		-- onFx
+		local trackPopup = TrackPopup()
+		trackPopup:show(_index, 38 + 240, function(index, value)
+				-- onDelayLevel
+				print("Delay level: " .. index .. " level: ".. value)
+				grainPlayer:setDelayLevel(index, value)
+			end, function(index, value)
+				-- onDelayFeedback
+				print("Delay feedback: " .. index .. " level: ".. value)
+				grainPlayer:setDelayFeedback(index, value)
+			end, function(index, lowActive)
+				-- onLoActive
+				print("Low filter active: " .. index .. " active: ".. tostring(lowActive))
+				grainPlayer:setLoActive(index, lowActive)
+			end, function(index, value)
+				-- onLoFreq
+				print("Lo freq: " .. index .. " freq: ".. value)
+				grainPlayer:setLoFreq(index, value)
+			end, function(index, value)
+				-- onLoRes
+				print("Lo res: " .. index .. " res: ".. value)
+				grainPlayer:setLoRes(index, value)
+			end)
 	end)
 	popManager:add(self.control4)
 	focusManager:addView(self.control4:getRow1View(), 2)
@@ -163,6 +264,31 @@ function PlayDialog:show(parentPath, onShowSettings)
 	end, function(index, reverseActive) 
 		-- onReverse
 		grainPlayer:setReverse(index, reverseActive)
+	end, function(_index)
+		print("SHOW FX")
+		-- onFx
+		local trackPopup = TrackPopup()
+		trackPopup:show(_index, 38 + 320, function(index, value)
+				-- onDelayLevel
+				print("Delay level: " .. index .. " level: ".. value)
+				grainPlayer:setDelayLevel(index, value)
+			end, function(index, value)
+				-- onDelayFeedback
+				print("Delay feedback: " .. index .. " level: ".. value)
+				grainPlayer:setDelayFeedback(index, value)
+			end, function(index, lowActive)
+				-- onLoActive
+				print("Low filter active: " .. index .. " active: ".. tostring(lowActive))
+				grainPlayer:setLoActive(index, lowActive)
+			end, function(index, value)
+				-- onLoFreq
+				print("Lo freq: " .. index .. " freq: ".. value)
+				grainPlayer:setLoFreq(index, value)
+			end, function(index, value)
+				-- onLoRes
+				print("Lo res: " .. index .. " res: ".. value)
+				grainPlayer:setLoRes(index, value)
+			end)
 	end)
 	popManager:add(self.control5)
 	focusManager:addView(self.control5:getRow1View(), 2)

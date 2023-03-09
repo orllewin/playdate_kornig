@@ -36,9 +36,7 @@ local recordDialog = nil
 local playDialog = nil
 
 local menu = playdate.getSystemMenu()
-local settingsMenuItem, error = menu:addMenuItem("Settings", function() 
-	showSettings()
-end)
+
 local recordMenuItem, error = menu:addMenuItem("Record", function() 
 	if playDialog ~= nil and playDialog:isShowing() then playDialog:stop() end
 	showRecordDialog()

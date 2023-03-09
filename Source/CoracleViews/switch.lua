@@ -5,7 +5,6 @@ TOGGLE_LABEL_HEIGHT = 14
 function Switch:init(label, xx, yy, w, active, listener)
 	Switch.super.init(self)
 	
-	self.label = label
 	self.xx = xx
 	self.yy = yy
 	
@@ -38,15 +37,22 @@ function Switch:init(label, xx, yy, w, active, listener)
 	
 end
 
+function Switch:removeAll()
+	self.label:remove()
+	self.focusedSprite:remove()
+	self:remove()
+	
+end
+
 function Switch:draw()
 	local image = playdate.graphics.image.new(self.w, self.h + TOGGLE_LABEL_HEIGHT)
 	playdate.graphics.pushContext(image)
 	playdate.graphics.setColor(playdate.graphics.kColorBlack)
 
 	if(self.active)then
-		playdate.graphics.fillRect(42, (TOGGLE_LABEL_HEIGHT-12)/2 + 6, 16, 12)
+		playdate.graphics.fillRect(self.w - 20, (TOGGLE_LABEL_HEIGHT-12)/2 + 6, 16, 12)
 	else
-		playdate.graphics.drawRect(42, (TOGGLE_LABEL_HEIGHT-12)/2 + 6, 16, 12)
+		playdate.graphics.drawRect(self.w - 20, (TOGGLE_LABEL_HEIGHT-12)/2 + 6, 16, 12)
 	end
 	playdate.graphics.popContext()
 	

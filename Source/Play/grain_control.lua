@@ -9,7 +9,7 @@ class('GrainControl').extends()
 local w = 80
 local h = 150
 
-function GrainControl:init(index, onPosition, onDrift, onWidth, onJump, onReverse)
+function GrainControl:init(index, onPosition, onDrift, onWidth, onJump, onReverse, onFx)
 	GrainControl.super.init(self)
 	
 	self.index = index
@@ -18,6 +18,7 @@ function GrainControl:init(index, onPosition, onDrift, onWidth, onJump, onRevers
 	self.onWidth = onWidth
 	self.onJump = onJump
 	self.onReverse = onReverse
+	self.onFx = onFx
 	
 	local xx = (index - 1) * w + (w/2)
 		
@@ -42,7 +43,7 @@ function GrainControl:init(index, onPosition, onDrift, onWidth, onJump, onRevers
 	end)
 	
 	self.fxButton = ButtonMinimal("FX", xx, 226,  w - 10, 12, function()
-		--todo
+		if self.onFx ~= nil then self.onFx(index) end
 	end)
 end
 

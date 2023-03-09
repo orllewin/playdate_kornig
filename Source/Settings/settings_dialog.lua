@@ -16,7 +16,7 @@ class('SettingsDialog').extends(playdate.graphics.sprite)
 local graphics <const> = playdate.graphics
 local sprites = {}
  
-function SettingsDialog:init(maxSeconds)
+function SettingsDialog:init()
 	SettingsDialog.super.init(self)
 	self.showing = false
 end
