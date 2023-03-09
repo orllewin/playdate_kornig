@@ -66,14 +66,29 @@ function GrainPlayer:initialise(samplePath, onReady)
 		local sample = pSample:getSubsample(headFrame, tailFrame)
 
 		local channel = sound.channel.new()
-		--channel:addSource(sample)
-		print("Channel created and source added")
+		
 		local player = sound.sampleplayer.new(sample)
+		channel:addSource(player)
+		
+		local lowpass = sound.twopolefilter.new(sound.kFilterLowPass)
+		channel:addEffect(lowpass)
+		lowpass:setMix(0)
+		lowpass:setFrequency(10000)
+		
+		local delay = sound.delayline.new(0.5)
+		delay:setFeedback(0.1)
+		delay:setMix(0.0)
+		channel:addEffect(delay)
+		
+		print("Channel created and source added")
+		
 		local grainSample = {
 			channel = channel,
 			config = config,
 			sample = sample,
-			player = player
+			player = player,
+			delay = delay,
+			lowpass = lowpass
 		}
 		children[i] = grainSample
 		configs[i] = config
@@ -166,6 +181,17 @@ function GrainPlayer:frame(ms)
 end
 
 --  Children params:
+function GrainPlayer:setDelayLevel(index, delayLevel) children[index].delay:setMix(delayLevel) end
+function GrainPlayer:setDelayFeedback(index, feedbackLevel) children[index].delay:setFeedback(feedbackLevel) end
+function GrainPlayer:setLoActive(index, active)
+	if active then
+		children[index].lowpass:setMix(1.0)
+	else
+		children[index].lowpass:setMix(0.0)
+	end
+end
+function GrainPlayer:setLoFreq(index, freq) children[index].lowpass:setFrequency(map(freq, 0.0, 1.0, 100, 10000)) end
+function GrainPlayer:setLoRes(index, res) children[index].lowpass:setResonance(res) end
 function GrainPlayer:setReverse(index, reverseActive)
 	if #children == 0 then return end
 	children[index].config.reverse = reverseActive
@@ -278,12 +304,8 @@ function GrainPlayer:doDrift(index, driftAmount)
 end
 
 function GrainPlayer:move(index, value)
-	print("moving index: " .. index .. " value: " .. value)
-	
 	local midpoint = map(value, 0, 100, 0, pLengthMs)
-
 	local config = children[index].config
-	
 	local width = config.width
 	
 	--Ensure subsample is within sample range
