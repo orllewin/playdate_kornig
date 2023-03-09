@@ -41,6 +41,8 @@ local SPD = 0.25
 
 local rate = SPD
 
+local playChance = 5
+
 function GrainPlayer:init()
 	GrainPlayer.super.init(self)
 end
@@ -115,7 +117,7 @@ end
 function GrainPlayer:update()
 	if self.stopped then return end
 	
-	if math.random(100) < 5 then
+	if math.random(100) < playChance then
 		local index = math.random(childCount)
 		if children[index].config.reverse then
 			if math.random(100) < 33 then
@@ -141,6 +143,10 @@ function GrainPlayer:update()
 		end
 	end
 	
+end
+
+function GrainPlayer:changeTempo(tempo)
+	playChance = map(tempo, 0.0, 1.0, 1, 10)
 end
 
 function GrainPlayer:stop()

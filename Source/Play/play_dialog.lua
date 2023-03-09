@@ -190,6 +190,10 @@ function PlayDialog:show(parentPath)
 	self.showing = true
 end
 
+function PlayDialog:changeTempo(tempo)
+	grainPlayer:changeTempo(tempo)
+end
+
 function PlayDialog:stop()
 	grainPlayer:stop()
 end

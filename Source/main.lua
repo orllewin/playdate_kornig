@@ -11,6 +11,7 @@ import 'CoreLibs/graphics'
 import 'CoreLibs/timer'
 import 'Play/play_dialog'
 import 'Record/record_dialog'
+import 'Settings/settings_dialog'
 
 import 'main_options_dialog'
 
@@ -35,6 +36,9 @@ local recordDialog = nil
 local playDialog = nil
 
 local menu = playdate.getSystemMenu()
+local settingsMenuItem, error = menu:addMenuItem("Settings", function() 
+	showSettings()
+end)
 local recordMenuItem, error = menu:addMenuItem("Record", function() 
 	if playDialog ~= nil and playDialog:isShowing() then playDialog:stop() end
 	showRecordDialog()
@@ -58,6 +62,18 @@ else
 		elseif option == "open" then
 			
 		end
+	end)
+end
+
+function showSettings()
+	local settingsDialog = SettingsDialog()
+	settingsDialog:show(function(tempo) 
+		-- onTempoChange 0.0 to 1.0
+		print("onTempoChange: " .. tempo)
+		if playDialog ~= nil and playDialog:isShowing() then playDialog:changeTempo(tempo) end
+	end, function(rate) 
+		-- onRateChange
+		print("onRateChange: " .. rate)
 	end)
 end
 

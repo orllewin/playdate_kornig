@@ -66,6 +66,10 @@ function RotaryEncoder:setValue(value)
 	if(self.listener ~= nil)then self.listener(round(normalised, 2)) end
 end
 
+function RotaryEncoder:isFocused()
+	return self.hasFocus
+end
+
 function RotaryEncoder:setFocus(focus)
 	self.hasFocus = focus
 	self.focusedSprite:setVisible(focus)
