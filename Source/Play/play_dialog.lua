@@ -68,7 +68,7 @@ function PlayDialog:show(parentPath, onShowSettings)
 		print("SHOW FX")
 		-- onFx
 		local trackPopup = TrackPopup()
-		trackPopup:show(_index, 38, function(index, value)
+		trackPopup:show(_index, grainPlayer:getNormalisedFxValues(_index), 38, function(index, value)
 				-- onDelayLevel
 				print("Delay level: " .. index .. " level: ".. value)
 				grainPlayer:setDelayLevel(index, value)
@@ -118,7 +118,7 @@ function PlayDialog:show(parentPath, onShowSettings)
 		print("SHOW FX")
 		-- onFx
 		local trackPopup = TrackPopup()
-		trackPopup:show(_index, 38 + 80, function(index, value)
+		trackPopup:show(_index, grainPlayer:getNormalisedFxValues(_index), 38 + 80, function(index, value)
 				-- onDelayLevel
 				print("Delay level: " .. index .. " level: ".. value)
 				grainPlayer:setDelayLevel(index, value)
@@ -168,7 +168,7 @@ function PlayDialog:show(parentPath, onShowSettings)
 		print("SHOW FX")
 		-- onFx
 		local trackPopup = TrackPopup()
-		trackPopup:show(_index, 38 + 160, function(index, value)
+		trackPopup:show(_index, grainPlayer:getNormalisedFxValues(_index), 38 + 160, function(index, value)
 				-- onDelayLevel
 				print("Delay level: " .. index .. " level: ".. value)
 				grainPlayer:setDelayLevel(index, value)
@@ -218,7 +218,7 @@ function PlayDialog:show(parentPath, onShowSettings)
 		print("SHOW FX")
 		-- onFx
 		local trackPopup = TrackPopup()
-		trackPopup:show(_index, 38 + 240, function(index, value)
+		trackPopup:show(_index, grainPlayer:getNormalisedFxValues(_index), 38 + 240, function(index, value)
 				-- onDelayLevel
 				print("Delay level: " .. index .. " level: ".. value)
 				grainPlayer:setDelayLevel(index, value)
@@ -268,7 +268,7 @@ function PlayDialog:show(parentPath, onShowSettings)
 		print("SHOW FX")
 		-- onFx
 		local trackPopup = TrackPopup()
-		trackPopup:show(_index, 38 + 320, function(index, value)
+		trackPopup:show(_index, grainPlayer:getNormalisedFxValues(_index), 38 + 320, function(index, value)
 				-- onDelayLevel
 				print("Delay level: " .. index .. " level: ".. value)
 				grainPlayer:setDelayLevel(index, value)
@@ -298,7 +298,7 @@ function PlayDialog:show(parentPath, onShowSettings)
 	focusManager:addView(self.control5:getRow5View(), 6)
 	focusManager:addView(self.control5:getRow6View(), 7)
 	
-	focusManager:start()
+	focusManager:startSpecific(2, 1)
 	
 	--Previous dialog hasn't popped yet, so wait:
 	playdate.timer.performAfterDelay(1000, function() 

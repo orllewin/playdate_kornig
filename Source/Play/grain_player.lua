@@ -73,7 +73,7 @@ function GrainPlayer:initialise(samplePath, onReady)
 		local lowpass = sound.twopolefilter.new(sound.kFilterLowPass)
 		channel:addEffect(lowpass)
 		lowpass:setMix(0)
-		lowpass:setFrequency(10000)
+		lowpass:setFrequency(5000)
 		
 		local delay = sound.delayline.new(0.5)
 		delay:setFeedback(0.1)
@@ -125,7 +125,12 @@ function GrainPlayer:getRandomSubsampleConfig()
 		parentLength = pLengthMs,
 		driftAmount = 0,
 		jump = false,
-		reverse = false
+		reverse = false,
+		delayMix = 0.0,
+		delayFeedback = 0.1,
+		loActive = false,
+		loFreq = 5000,
+		loRes = 0.5
 	}
 end
 
@@ -180,17 +185,41 @@ function GrainPlayer:frame(ms)
 end
 
 --  Children params:
-function GrainPlayer:setDelayLevel(index, delayLevel) children[index].delay:setMix(delayLevel) end
-function GrainPlayer:setDelayFeedback(index, feedbackLevel) children[index].delay:setFeedback(feedbackLevel) end
+function GrainPlayer:getNormalisedFxValues(index)
+	return{
+		delayMix = children[index].config.delayMix,
+		delayFeedback = children[index].config.delayFeedback,
+		loActive = children[index].config.loActive,
+		loFreq = map(children[index].config.loFreq, 100, 10000, 0.0, 1.0),
+		loRes = children[index].config.loRes
+	}
+end
+function GrainPlayer:setDelayLevel(index, delayLevel) 
+	local delayMix = delayLevel/2
+	children[index].config.delayMix = delayMix
+	children[index].delay:setMix(delayMix) 
+end
+function GrainPlayer:setDelayFeedback(index, feedbackLevel) 
+	children[index].config.delayFeedback = feedbackLevel
+	children[index].delay:setFeedback(feedbackLevel)
+end
 function GrainPlayer:setLoActive(index, active)
+	children[index].config.loActive = active
 	if active then
 		children[index].lowpass:setMix(1.0)
 	else
 		children[index].lowpass:setMix(0.0)
 	end
 end
-function GrainPlayer:setLoFreq(index, freq) children[index].lowpass:setFrequency(map(freq, 0.0, 1.0, 100, 10000)) end
-function GrainPlayer:setLoRes(index, res) children[index].lowpass:setResonance(res) end
+function GrainPlayer:setLoFreq(index, freq) 
+	local loFreq = map(freq, 0.0, 1.0, 100, 10000)
+	children[index].config.loFreq = loFreq
+	children[index].lowpass:setFrequency(loFreq) 
+end
+function GrainPlayer:setLoRes(index, res) 
+	children[index].config.loRes = res
+	children[index].lowpass:setResonance(res) 
+end
 function GrainPlayer:setReverse(index, reverseActive)
 	if #children == 0 then return end
 	children[index].config.reverse = reverseActive

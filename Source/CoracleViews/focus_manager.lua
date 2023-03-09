@@ -3,10 +3,12 @@ class('FocusManager').extends()
 -- Handles navigation. 
 -- Any view added to this class must have a setFocus(bool)
 -- Views that work with the crank should have a turn(degrees) method
-function FocusManager:init(_unhandledListener)
+function FocusManager:init(_unhandledListener, bListener)
 	FocusManager.super.init(self)
 	
-	if _unhandledListener ~= nil then _unhandledListener(0) end
+	if _unhandledListener ~= nil then _unhandledListener(0) end--wtf debug code???????
+	
+	self.bListener = bListener
 	
 	self.unhandledListener = _unhandledListener
 	
@@ -22,6 +24,12 @@ end
 function FocusManager:start()
 	assert(#self.viewMatrix[1] > 0, "You havn't added any views")
 	self.viewMatrix[1][1]:setFocus(true)
+	self.started = true
+end
+
+function FocusManager:startSpecific(row, index)
+	assert(#self.viewMatrix[1] > 0, "You havn't added any views")
+	self.viewMatrix[row][index]:setFocus(true)
 	self.started = true
 end
 
@@ -91,6 +99,9 @@ function FocusManager:getInputHandler()
 		cranked = function(change, acceleratedChange)
 			local focused = self:getFocusedView()
 			if focused.turn ~= nil then focused:turn(change) end
+		end,
+		BButtonDown = function()
+			if self.bListener ~= nil then self.bListener() end
 		end,
 		AButtonDown = function()
 			local focused = self:getFocusedView()

@@ -69,7 +69,7 @@ function RotaryEncoder:setValue(value)
 		normalised = 0.0
 	end
 	self:turn(map(normalised, 0.0, 1.0, 0, 300))
-	if(self.listener ~= nil)then self.listener(round(normalised, 2)) end
+	--if(self.listener ~= nil)then self.listener(round(normalised, 2)) end
 end
 
 function RotaryEncoder:isFocused()

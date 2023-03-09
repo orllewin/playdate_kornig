@@ -20,7 +20,7 @@ function TrackPopup:init()
 	self.showing = false
 end
 
-function TrackPopup:show(index, xx, onDelayLevel, onDelayFeedback, onLoActive, onLoFreq, onLoRes)	
+function TrackPopup:show(index, normalisedValues, xx, onDelayLevel, onDelayFeedback, onLoActive, onLoFreq, onLoRes)	
 	
 	self.index = index
 	self.onDelayLevel = onDelayLevel
@@ -29,10 +29,12 @@ function TrackPopup:show(index, xx, onDelayLevel, onDelayFeedback, onLoActive, o
 	self.onLoFreq = onLoFreq
 	self.onLoRes = onLoRes
 	
-	self.focusManager = FocusManager()
+	self.focusManager = FocusManager(nil, function() 
+		self:pop()
+	end)
 	
 	--dialog background
-	local dH = 195
+	local dH = 175
 	local dW = 76
 	self.showing = true
 	local background = graphics.image.new(dW, dH, graphics.kColorWhite)
@@ -44,21 +46,31 @@ function TrackPopup:show(index, xx, onDelayLevel, onDelayFeedback, onLoActive, o
 	self:setImage(background)
 	self:add()
 	
-	local yOffset = 50
+	local yOffset = 72
 	self.delayKnob = RotaryEncoder("Dly", xx+2, 16+yOffset, dW - 18, function(value) 
 		if self.onDelayLevel ~= nil then self.onDelayLevel(self.index, value) end
 	end)
+	self.delayKnob:setValue(normalisedValues.delayMix)
 	self.focusManager:addView(self.delayKnob, 1)
 	
 	self.feedbackKnob = RotaryEncoder("Fbk", xx+2, 49+yOffset, dW - 18, function(value) 
 		if self.onDelayFeedback ~= nil then self.onDelayFeedback(self.index, value) end
 	end)
+	self.feedbackKnob:setValue(normalisedValues.delayFeedback)
 	self.focusManager:addView(self.feedbackKnob, 2)
 	
-	self.div = DividerHorizontal(xx - 29, 119, 60, 0.4)
+	self.div = DividerHorizontal(xx - 29, 69 + yOffset, 60, 0.4)
+	
+	-- return{
+	-- 	delayMix = children[index].config.delayMix,
+	-- 	delayFeedback = children[index].config.delayFeedback,
+	-- 	loActive = children[index].config.loActive,
+	-- 	loFreq = map(children[index].config.loFreq, 100, 10000, 0.0, 1.0),
+	-- 	loRes = children[index].config.loRes
+	-- }
 	
 	--label, xx, yy, w, active, listener
-	self.loSwitch = Switch("Lo",  xx+2, 88+yOffset, 55, false, function(active)
+	self.loSwitch = Switch("Lo",  xx+2, 88+yOffset, 55, normalisedValues.loActive, function(active)
 		if self.onLoActive ~= nil then self.onLoActive(self.index, active) end
 	end)
 	self.focusManager:addView(self.loSwitch, 3)
@@ -66,18 +78,14 @@ function TrackPopup:show(index, xx, onDelayLevel, onDelayFeedback, onLoActive, o
 	self.loFreqKnob = RotaryEncoder("Frq", xx+2, 113+yOffset, dW - 18, function(value) 
 		if self.onLoFreq ~= nil then self.onLoFreq(self.index, value) end
 	end)
+	self.loFreqKnob:setValue(normalisedValues.loFreq)
 	self.focusManager:addView(self.loFreqKnob, 4)
 	self.loResKnob = RotaryEncoder("Res", xx+2, 145+yOffset, dW - 18, function(value) 
 		if self.onLoRes ~= nil then self.onLoRes(self.index, value) end
 	end)
+	self.loResKnob:setValue(normalisedValues.loRes)
 	self.focusManager:addView(self.loResKnob, 5)
-	
-	self.dismissButton = ButtonMinimal("Close", xx+2, 222, dW - 12, 12, function()
-		--dismiss
-		self:pop()
-	end)
-	self.focusManager:addView(self.dismissButton, 6)
-	
+
 	self.focusManager:push() 
 	self.focusManager:start()
 		
@@ -91,6 +99,5 @@ function TrackPopup:pop()
 	self.loFreqKnob:removeAll()
 	self.loResKnob:removeAll()
 	self.feedbackKnob:removeAll()
-	self.dismissButton:removeAll()
 	self:remove()
 end

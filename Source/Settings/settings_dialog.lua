@@ -23,12 +23,15 @@ end
 
 function SettingsDialog:show(normalisedTempo, onTempoChange, onRateChange)	
 	
-	self.focusManager = FocusManager()
+	self.focusManager = FocusManager(nil, function() 
+		--bListener
+		self:pop()
+	end)
 	
 	self.onTempoChange = onTempoChange
 	self.onRateChange = onRateChange
 	
-	local dH = 162
+	local dH = 138
 	self.showing = true
 	local background = graphics.image.new(120, dH, graphics.kColorWhite)
 	playdate.graphics.pushContext(background)
@@ -47,29 +50,27 @@ function SettingsDialog:show(normalisedTempo, onTempoChange, onRateChange)
 	
 	self.rate0_1Button = ButtonMinimal("Rate: 0.125", 342, 50, 108, 12, function()
 		if self.onRateChange ~= nil then self.onRateChange(0.125) end
+		self:pop()
 	end)
 	self.focusManager:addView(self.rate0_1Button, 2)
 	
 	self.rate0_25Button = ButtonMinimal("Rate: 0.25", 342, 73, 108, 12, function()
 		if self.onRateChange ~= nil then self.onRateChange(0.25) end
+		self:pop()
 	end)
 	self.focusManager:addView(self.rate0_25Button, 3)
 	
 	self.rate0_5Button = ButtonMinimal("Rate: 0.5", 342, 96, 108, 12, function()
 		if self.onRateChange ~= nil then self.onRateChange(0.5) end
+		self:pop()
 	end)
 	self.focusManager:addView(self.rate0_5Button, 4)
 	
 	self.rate1Button = ButtonMinimal("Rate: 1.0", 342, 119, 108, 12, function()
 		if self.onRateChange ~= nil then self.onRateChange(1.0) end
-	end)
-	self.focusManager:addView(self.rate1Button, 5)
-	
-	self.dismissButton = ButtonMinimal("Done", 342, 142, 108, 12, function()
-		--dismiss
 		self:pop()
 	end)
-	self.focusManager:addView(self.dismissButton, 6)
+	self.focusManager:addView(self.rate1Button, 5)
 	
 	self.focusManager:push() 
 	self.focusManager:start()
@@ -83,6 +84,5 @@ function SettingsDialog:pop()
 	self.rate0_25Button:removeAll()
 	self.rate0_5Button:removeAll()
 	self.rate1Button:removeAll()
-	self.dismissButton:removeAll()
 	self:remove()
 end
