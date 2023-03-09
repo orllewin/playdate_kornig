@@ -37,6 +37,10 @@ local listener = nil
 local childCount = 5
 local children = {}
 
+local SPD = 0.25
+
+local rate = SPD
+
 function GrainPlayer:init()
 	GrainPlayer.super.init(self)
 end
@@ -63,7 +67,6 @@ function GrainPlayer:initialise(samplePath, onReady)
 		--channel:addSource(sample)
 		print("Channel created and source added")
 		local player = sound.sampleplayer.new(sample)
-		player:setRate(0.5)
 		local grainSample = {
 			channel = channel,
 			config = config,
@@ -104,17 +107,27 @@ function GrainPlayer:getRandomSubsampleConfig()
 		tail = subsampleEndMs,
 		parentLength = pLengthMs,
 		driftAmount = 0,
-		jump = false
+		jump = false,
+		reverse = false
 	}
 end
 
 function GrainPlayer:update()
 	if self.stopped then return end
 	
-	
 	if math.random(100) < 5 then
 		local index = math.random(childCount)
-		children[index].player:play()
+		if children[index].config.reverse then
+			if math.random(100) < 33 then
+				children[index].player:setRate(-rate)
+			else
+				children[index].player:setRate(rate)
+			end
+			children[index].player:play()
+		else
+			children[index].player:setRate(rate)
+			children[index].player:play()
+		end
 	end
 	
 	for i=1,#children do
@@ -143,10 +156,16 @@ function GrainPlayer:frame(ms)
 end
 
 --  Children params:
+function GrainPlayer:setReverse(index, reverseActive)
+	if #children == 0 then return end
+	children[index].config.reverse = reverseActive
+end
+
 function GrainPlayer:setJump(index, jumpActive)
 	if #children == 0 then return end
 	children[index].config.jump = jumpActive
 end
+
 function GrainPlayer:setWidth(index, nWidth)
 	if #children == 0 then return end
 
@@ -174,7 +193,6 @@ function GrainPlayer:setWidth(index, nWidth)
 	children[index].sample = sample
 	children[index].player:setSample(children[index].sample)
 	children[index].config = config
-	children[index].player:setRate(0.5)
 	if listener ~= nil then listener(index, config) end
 end
 
@@ -211,10 +229,7 @@ function GrainPlayer:doJump(index)
 	children[index].sample = sample
 	children[index].player:setSample(children[index].sample)
 	children[index].config = config
-	children[index].player:setRate(0.5)
 	if listener ~= nil then listener(index, config) end
-
-
 end
 
 
@@ -248,7 +263,7 @@ function GrainPlayer:doDrift(index, driftAmount)
 	children[index].sample = sample
 	children[index].player:setSample(children[index].sample)
 	children[index].config = config
-	children[index].player:setRate(0.5)
+	children[index].player:setRate(SPD)
 	if listener ~= nil then listener(index, config) end
 end
 
@@ -283,7 +298,6 @@ function GrainPlayer:move(index, value)
 	children[index].sample = sample
 	children[index].player:setSample(children[index].sample)
 	children[index].config = config
-	children[index].player:setRate(0.5)
 	if listener ~= nil then listener(index, config) end
 end
 

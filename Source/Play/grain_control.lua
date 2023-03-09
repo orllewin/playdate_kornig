@@ -2,13 +2,14 @@ import 'CoracleViews/label_centre'
 import 'CoracleViews/mini_slider'
 import 'CoracleViews/rotary_encoder'
 import 'CoracleViews/switch'
+import 'CoracleViews/button_minimal'
 
 class('GrainControl').extends()
 
 local w = 80
 local h = 150
 
-function GrainControl:init(index, onPosition, onDrift, onWidth, onJump)
+function GrainControl:init(index, onPosition, onDrift, onWidth, onJump, onReverse)
 	GrainControl.super.init(self)
 	
 	self.index = index
@@ -16,6 +17,7 @@ function GrainControl:init(index, onPosition, onDrift, onWidth, onJump)
 	self.onDrift = onDrift
 	self.onWidth = onWidth
 	self.onJump = onJump
+	self.onReverse = onReverse
 	
 	local xx = (index - 1) * w + (w/2)
 		
@@ -34,6 +36,14 @@ function GrainControl:init(index, onPosition, onDrift, onWidth, onJump)
 	self.jumpSwitch = Switch("Jump", xx, 190, w - 15, false, function(active) 
 		if self.onJump ~= nil then self.onJump(index, active) end
 	end)
+	
+	self.reverseSwitch = Switch("Rev.", xx, 210, w - 15, false, function(active) 
+		if self.onReverse ~= nil then self.onReverse(index, active) end
+	end)
+	
+	self.fxButton = ButtonMinimal("FX", xx, 226,  w - 10, 12, function()
+		--todo
+	end)
 end
 
 function GrainControl:getSprites()
@@ -44,3 +54,5 @@ function GrainControl:getRow1View() return self.positionSlider end
 function GrainControl:getRow2View() return self.widthKnob end
 function GrainControl:getRow3View() return self.driftKnob end
 function GrainControl:getRow4View() return self.jumpSwitch end
+function GrainControl:getRow5View() return self.reverseSwitch end
+function GrainControl:getRow6View() return self.fxButton end
