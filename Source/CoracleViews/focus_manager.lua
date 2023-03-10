@@ -29,6 +29,8 @@ end
 
 function FocusManager:startSpecific(row, index)
 	assert(#self.viewMatrix[1] > 0, "You havn't added any views")
+	self.activeRow = row
+	self.activeIndex = index
 	self.viewMatrix[row][index]:setFocus(true)
 	self.started = true
 end

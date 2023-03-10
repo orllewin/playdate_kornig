@@ -132,7 +132,11 @@ function GrainPlayer:getRandomSubsampleConfig()
 		delayFeedback = 0.1,
 		loActive = false,
 		loFreq = 5000,
-		loRes = 0.5
+		loRes = 0.5,
+		rate0125 = false,
+		rate025 = true,
+		rate05 = false,
+		rate1 = false
 	}
 end
 
@@ -141,15 +145,30 @@ function GrainPlayer:update()
 	
 	if math.random(100) < playChance then
 		local index = math.random(childCount)
-		if children[index].config.reverse then
+		
+		local config = children[index].config
+		
+		local rRate = rate--global rate
+		
+		if config.rate0125 and math.random(100) < 5 then
+			rRate = 0.125
+		elseif config.rate025 and math.random(100) < 5 then
+			rRate = 0.25
+		elseif config.rate05 and math.random(100) < 5 then
+			rRate = 0.5
+		elseif config.rate1 and math.random(100) < 5 then
+			rRate = 1.0
+		end
+				
+		if config.reverse then
 			if math.random(100) < 33 then
-				children[index].player:setRate(-rate)
+				children[index].player:setRate(-rRate)
 			else
-				children[index].player:setRate(rate)
+				children[index].player:setRate(rRate)
 			end
 			children[index].player:play()
 		else
-			children[index].player:setRate(rate)
+			children[index].player:setRate(rRate)
 			children[index].player:play()
 		end
 	end
@@ -188,13 +207,41 @@ end
 
 --  Children params:
 function GrainPlayer:getNormalisedFxValues(index)
+	local config = children[index].config
 	return{
-		delayMix = children[index].config.delayMix,
-		delayFeedback = children[index].config.delayFeedback,
-		loActive = children[index].config.loActive,
-		loFreq = map(children[index].config.loFreq, 100, 10000, 0.0, 1.0),
-		loRes = children[index].config.loRes
+		delayMix = config.delayMix,
+		delayFeedback = config.delayFeedback,
+		loActive = config.loActive,
+		loFreq = map(config.loFreq, 100, 10000, 0.0, 1.0),
+		loRes = config.loRes,
+		rate0125 = config.rate0125,
+		rate025 = config.rate025,
+		rate05 = config.rate05,
+		rate1 = config.rate1
 	}
+end
+function GrainPlayer:setRateActiveByIndex(index, rateIndex, active)
+	if rateIndex == 1 then
+		self:setRate0125Active(index, active)
+	elseif rateIndex == 2 then
+		self:setRate025Active(index, active)
+	elseif rateIndex == 3 then
+		self:setRate05Active(index, active)
+	elseif rateIndex == 4 then
+		self:setRate1Active(index, active)
+	end
+end
+function GrainPlayer:setRate0125Active(index, active)
+	children[index].config.rate0125 = active
+end
+function GrainPlayer:setRate025Active(index, active)
+	children[index].config.rate025 = active
+end
+function GrainPlayer:setRate05Active(index, active)
+	children[index].config.rate05 = active
+end
+function GrainPlayer:setRate1Active(index, active)
+	children[index].config.rate1 = active
 end
 function GrainPlayer:setDelayLevel(index, delayLevel) 
 	local delayMix = delayLevel/2
