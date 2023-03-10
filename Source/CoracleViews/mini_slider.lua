@@ -80,16 +80,22 @@ function MiniSlider:turn(degrees)
 	elseif self.value > self.rangeStart then
 		self.value -= 1
 	end
-	print("minislider turn: " .. self.value)
+
 	self.knobSprite:moveTo(self.xx - (self.w/2) + map(self.value, self.rangeStart, self.rangeEnd, 5, self.w - 10), self.yy + LABEL_HEIGHT - 6)
 	
-	print("showValue: " .. tostring(self.showValue))
 	if self.showValue then
-		print("show labelllll" .. self.value)
 		self.valueLabel:setText(self.value)
 	end
 		
 	if self.listener ~= nil then self.listener(self.value) end
+end
+
+function MiniSlider:setValue(value)
+	self.value = value
+	self.knobSprite:moveTo(self.xx - (self.w/2) + map(self.value, self.rangeStart, self.rangeEnd, 5, self.w - 10), self.yy + LABEL_HEIGHT - 6)
+		if self.showValue then
+			self.valueLabel:setText(self.value)
+		end
 end
 
 function MiniSlider:setFocus(focus)

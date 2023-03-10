@@ -104,6 +104,8 @@ function GrainPlayer:getRandomSubsampleConfig()
 	local maxWidthMs = pLengthMs/5
 	local widthMs = math.random(math.floor(maxWidthMs))
 	
+	if widthMs < 65 then widthMs = 65 end
+	
 	--Ensure subsample is within sample range
 	if randomMidPointMs - widthMs/2 < 0 then
 		randomMidPointMs = widthMs/2
@@ -234,7 +236,7 @@ function GrainPlayer:setWidth(index, nWidth)
 	if #children == 0 then return end
 
 	local maxWidthMs = pLengthMs/5
-	local widthMs = map(nWidth, 0.0, 1.0, 75, maxWidthMs)
+	local widthMs = map(nWidth, 0.0, 1.0, 65, maxWidthMs)
 	
 	local config = children[index].config
 	local midpoint = config.midpoint

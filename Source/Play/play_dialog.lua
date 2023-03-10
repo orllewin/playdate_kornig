@@ -315,6 +315,19 @@ function PlayDialog:show(parentPath, onShowSettings)
 			print("init trackView " .. c)
 			local cfg = childConfigs[c]
 		  self.trackViews[c]:update(cfg)
+			
+			if c == 1 then
+				self.control1:initialise(cfg)
+			elseif c == 2 then
+				self.control2:initialise(cfg)
+			elseif c == 3 then
+				self.control3:initialise(cfg)
+			elseif c == 4 then
+				self.control4:initialise(cfg)
+			elseif c == 5 then
+				self.control5:initialise(cfg)
+			end
+
 		end
 	end)
 

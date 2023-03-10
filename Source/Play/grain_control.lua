@@ -57,3 +57,11 @@ function GrainControl:getRow3View() return self.driftKnob end
 function GrainControl:getRow4View() return self.jumpSwitch end
 function GrainControl:getRow5View() return self.reverseSwitch end
 function GrainControl:getRow6View() return self.fxButton end
+
+function GrainControl:initialise(config)
+	
+	self.positionSlider:setValue(map(config.midpoint, 0, config.parentLength, 0, 100))
+	
+	local maxWidthMs = config.parentLength/5
+	self.widthKnob:setValue(map(config.width, 75, maxWidthMs, 0.0, 1.0))
+end
