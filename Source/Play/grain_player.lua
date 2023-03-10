@@ -217,8 +217,12 @@ function GrainPlayer:getNormalisedFxValues(index)
 		rate0125 = config.rate0125,
 		rate025 = config.rate025,
 		rate05 = config.rate05,
-		rate1 = config.rate1
+		rate1 = config.rate1,
+		globalRate = rate
 	}
+end
+function GrainPlayer:getGlobalRate()
+	return rate
 end
 function GrainPlayer:setRateActiveByIndex(index, rateIndex, active)
 	if rateIndex == 1 then

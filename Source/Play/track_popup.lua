@@ -47,25 +47,42 @@ function TrackPopup:show(index, normalisedValues, xx, onDelayLevel, onDelayFeedb
 	self:setImage(background)
 	self:add()
 	
+	local globalRate = normalisedValues.globalRate
+	
+	print("GLOBAL RATE: " .. globalRate)
+	
 	self.rate0125Switch = Switch("0.12",  xx+2, 14, 55, false, function(active)
 		if self.onRate ~= nil then self.onRate(self.index, 1, active) end
 	end)
 	self.focusManager:addView(self.rate0125Switch, 1)
+	if globalRate == 0.125 then
+		self.rate0125Switch:setUnclickable()
+	end
 	
-	self.rate025Switch = Switch("0.25",  xx+2, 14 + 20, 55, true, function(active)
+	self.rate025Switch = Switch("0.25",  xx+2, 14 + 20, 55, false, function(active)
 		if self.onRate ~= nil then self.onRate(self.index, 2, active) end
 	end)
 	self.focusManager:addView(self.rate025Switch, 2)
+	if globalRate == 0.25 then
+		print("SETTING rate025Switch unclickable")
+		self.rate025Switch:setUnclickable()
+	end
 	
 	self.rate05Switch = Switch("0.5",  xx+2, 14 + 40, 55, false, function(active)
 		if self.onRate ~= nil then self.onRate(self.index, 3, active) end
 	end)
 	self.focusManager:addView(self.rate05Switch, 3)
+	if globalRate == 0.5 then
+		self.rate05Switch:setUnclickable()
+	end
 	
 	self.rate1Switch = Switch("1.0",  xx+2, 14 + 60, 55, false, function(active)
 		if self.onRate ~= nil then self.onRate(self.index, 4, active) end
 	end)
 	self.focusManager:addView(self.rate1Switch, 4)
+	if globalRate == 1.0 then
+		self.rate1Switch:setUnclickable()
+	end
 	
 	local yOffset = 72
 	self.delayKnob = RotaryEncoder("Dly", xx+2, 27+yOffset, dW - 18, function(value) 

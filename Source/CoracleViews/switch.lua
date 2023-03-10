@@ -13,6 +13,7 @@ function Switch:init(label, xx, yy, w, active, listener)
 	
 	self.active = active
 	self.hasFocus = false
+	self.clickable = true
 	
 	self.listener = listener
 	
@@ -49,14 +50,33 @@ function Switch:draw()
 	playdate.graphics.pushContext(image)
 	playdate.graphics.setColor(playdate.graphics.kColorBlack)
 
-	if(self.active)then
+	if self.clickable == false then 
+		print("UNCLICKABLE")
+		playdate.graphics.fillRect(self.w - 20, (TOGGLE_LABEL_HEIGHT-12)/2 + 6, 16, 12)
+	elseif(self.active)then
 		playdate.graphics.fillRect(self.w - 20, (TOGGLE_LABEL_HEIGHT-12)/2 + 6, 16, 12)
 	else
 		playdate.graphics.drawRect(self.w - 20, (TOGGLE_LABEL_HEIGHT-12)/2 + 6, 16, 12)
 	end
 	playdate.graphics.popContext()
 	
-	self:setImage(image)
+	if self.clickable == false then
+		local fadeImage = playdate.graphics.image.new(self.w, self.h + TOGGLE_LABEL_HEIGHT)
+		playdate.graphics.pushContext(fadeImage)
+		image:drawFaded(0, 0, 0.4, playdate.graphics.image.kDitherTypeBayer2x2)
+		playdate.graphics.popContext()
+		self:setImage(fadeImage)
+	else
+		self:setImage(image)
+	end
+	
+	
+end
+
+function Switch:setUnclickable()
+	print("Switch:setUnclickable()")
+	self.clickable = false
+	self:draw()
 end
 
 function Switch:setActive(active)
@@ -82,6 +102,7 @@ end
 
 function Switch:tap()
 	print("switch tap")
+	if self.clickable == false then return end
 	self.active = not self.active	
 	self:draw()
 	
