@@ -51,7 +51,7 @@ function TrackPopup:show(index, normalisedValues, xx, onDelayLevel, onDelayFeedb
 	
 	print("GLOBAL RATE: " .. globalRate)
 	
-	self.rate0125Switch = Switch("0.12",  xx+2, 14, 55, false, function(active)
+	self.rate0125Switch = Switch("0.12",  xx+2, 14, 55, normalisedValues.rate0125, function(active)
 		if self.onRate ~= nil then self.onRate(self.index, 1, active) end
 	end)
 	self.focusManager:addView(self.rate0125Switch, 1)
@@ -59,7 +59,7 @@ function TrackPopup:show(index, normalisedValues, xx, onDelayLevel, onDelayFeedb
 		self.rate0125Switch:setUnclickable()
 	end
 	
-	self.rate025Switch = Switch("0.25",  xx+2, 14 + 20, 55, false, function(active)
+	self.rate025Switch = Switch("0.25",  xx+2, 14 + 20, 55, normalisedValues.rate025, function(active)
 		if self.onRate ~= nil then self.onRate(self.index, 2, active) end
 	end)
 	self.focusManager:addView(self.rate025Switch, 2)
@@ -68,7 +68,7 @@ function TrackPopup:show(index, normalisedValues, xx, onDelayLevel, onDelayFeedb
 		self.rate025Switch:setUnclickable()
 	end
 	
-	self.rate05Switch = Switch("0.5",  xx+2, 14 + 40, 55, false, function(active)
+	self.rate05Switch = Switch("0.5",  xx+2, 14 + 40, 55, normalisedValues.rate05, function(active)
 		if self.onRate ~= nil then self.onRate(self.index, 3, active) end
 	end)
 	self.focusManager:addView(self.rate05Switch, 3)
@@ -76,7 +76,7 @@ function TrackPopup:show(index, normalisedValues, xx, onDelayLevel, onDelayFeedb
 		self.rate05Switch:setUnclickable()
 	end
 	
-	self.rate1Switch = Switch("1.0",  xx+2, 14 + 60, 55, false, function(active)
+	self.rate1Switch = Switch("1.0",  xx+2, 14 + 60, 55, normalisedValues.rate1, function(active)
 		if self.onRate ~= nil then self.onRate(self.index, 4, active) end
 	end)
 	self.focusManager:addView(self.rate1Switch, 4)
