@@ -24,10 +24,7 @@ end)
 local font = playdate.graphics.font.new("Fonts/font-rains-1x")
 playdate.graphics.setFont(font)
 
---local sysBoldFont = playdate.graphics.getSystemFont(playdate.graphics.font.kVariantBold)
---playdate.graphics.setFont(sysBoldFont)
-
-playdate.setMenuImage(playdate.graphics.image.new("Images/playdate_test_card"), 100)
+playdate.setMenuImage(playdate.graphics.image.new("Images/elderwean"), 100)
 
 local recordDialog = nil
 local playDialog = nil

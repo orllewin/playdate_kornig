@@ -55,7 +55,7 @@ function RecordDialog:show(onSampleReady)
 	
 	graphics.setImageDrawMode(graphics.kDrawModeFillBlack)
 
-	self.titleLabel = LabelLeft("Record Sample .. . .  .  .   .    .     .      .       .", 6, 6, 0.4)
+	self.titleLabel = LabelLeft("Record Sample", 6, 6, 0.4)
 	self:addSprite(self.titleLabel)
 	self.div = DividerHorizontal(6, 25, 388, 0.2)
 	
