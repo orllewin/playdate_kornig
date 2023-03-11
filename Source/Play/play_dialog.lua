@@ -22,9 +22,7 @@ function PlayDialog:init()
 	playdate.graphics.setFont(font)
 end
 
-function PlayDialog:show(parentPath, onShowSettings)
-	print("Play diualog initialising graimPlayer")
-	
+function PlayDialog:show(parentPath, onShowSettings)	
 	self.onShowSettings = onShowSettings
 	
 	local background = graphics.image.new(400, 240, graphics.kColorWhite)

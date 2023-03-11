@@ -12,6 +12,7 @@ import 'CoreLibs/timer'
 import 'Play/play_dialog'
 import 'Record/record_dialog'
 import 'Settings/settings_dialog'
+import 'Files/file_chooser_dialog'
 
 import 'main_options_dialog'
 
@@ -36,6 +37,15 @@ local recordDialog = nil
 local playDialog = nil
 
 local menu = playdate.getSystemMenu()
+
+local recordMenuItem, error = menu:addMenuItem("Load", function() 
+	local fileChooserDialog = FileChooserDialog()
+	fileChooserDialog:show(function() 
+		-- onCancel
+	end, function(path) 
+		-- onFile
+	end)
+end)
 
 local recordMenuItem, error = menu:addMenuItem("Record", function() 
 	if playDialog ~= nil and playDialog:isShowing() then playDialog:stop() end

@@ -4,9 +4,10 @@ local rowHeight = 16
 
 function TextList:init(items, xx, yy, w, h, onChange)
 	TextList.super.init(self)
+	print("TextList:init files: " .. #items )
 	self.items = items
 	self.onChange = onChange
-	playdate.graphics.setColor(playdate.graphics.kColorWhite)
+	playdate.graphics.setColor(playdate.graphics.kColorBlack)
 	self.yy = yy
 	self.w = w
 	self.h = h
@@ -45,8 +46,11 @@ end
 function TextList:drawRows()
 	local rowsImage = playdate.graphics.image.new(self.w, self.h)
 	playdate.graphics.pushContext(rowsImage)
+	playdate.graphics.setImageDrawMode(playdate.graphics.kDrawModeFillBlack)
+	playdate.graphics.setColor(playdate.graphics.kColorBlack)
 		for i=1,self.visibleRows do
 			local text = self.items[i + self.indexOffset]
+			text = replace(text, "_", " ")
 			if self:endsWith(text, ".pda") then  text = text:gsub(".pda", "") end
 			print("Drawing " .. text)
 			playdate.graphics.drawText(text, 4, ((i - 1) * rowHeight) + rowHeight/2 - 4)
@@ -115,5 +119,6 @@ function TextList:emitSelected()
 end
 
 function TextList:isFocused()
+	print("TextList:isFocused(): " .. tostring(self.hasFocus))
 	return self.hasFocus
 end

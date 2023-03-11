@@ -29,7 +29,7 @@ function MainOptionDialog:show(onOption)
 	
 	graphics.setImageDrawMode(graphics.kDrawModeFillBlack)
 	
-	self.titleLabel = LabelLeft("Kornig", 6, 12)
+	self.titleLabel = LabelLeft("Granular", 6, 12)
 	self.introLabel = LabelLeft("An experimental grain sampler.", 6, 54)
 	self.div = DividerHorizontal(6, 42, 388, 0.2)
 	
