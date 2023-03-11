@@ -154,9 +154,9 @@ function GrainPlayer:update()
 			rRate = 0.125
 		elseif config.rate025 and math.random(100) < 5 then
 			rRate = 0.25
-		elseif config.rate05 and math.random(100) < 5 then
+		elseif config.rate05 and math.random(100) < 8 then
 			rRate = 0.5
-		elseif config.rate1 and math.random(100) < 5 then
+		elseif config.rate1 and math.random(100) < 12 then
 			rRate = 1.0
 		end
 				
