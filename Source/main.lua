@@ -10,10 +10,6 @@ import 'CoreLibs/sprites'
 import 'CoreLibs/graphics'
 import 'CoreLibs/timer'
 import 'Play/play_dialog'
-import 'Record/record_dialog'
-import 'Settings/settings_dialog'
-import 'Files/file_chooser_dialog'
-
 import 'main_options_dialog'
 
 local graphics <const> = playdate.graphics
@@ -46,50 +42,18 @@ end)
 local cachePath = "recording.pda"
 
 if playdate.file.exists(cachePath) then
+	play(cachePath)
+else
+	MainOptionDialog():show(function(path) 
+		play(path)
+	end)
+end
+
+function play(path)
 	playDialog = PlayDialog()
 	print("Showing play dialog")
-	playDialog:show(cachePath, function(normalisedTempo)
+	playDialog:show(path, function(normalisedTempo)
 			showSettings(normalisedTempo)
-	end)
-else
-	MainOptionDialog():show(function(option) 
-		if option == "record" then
-			if playDialog ~= nil and playDialog:isShowing() then playDialog:stop() end
-			showRecordDialog()
-		elseif option == "open" then
-			
-		end
-	end)
-end
-
-function showSettings(normalisedTempo)
-	local settingsDialog = SettingsDialog()
-	settingsDialog:show(normalisedTempo, function(tempo) 
-		-- onTempoChange 0.0 to 1.0
-		print("onTempoChange: " .. tempo)
-		if playDialog ~= nil and playDialog:isShowing() then playDialog:changeTempo(tempo) end
-	end, function(rate) 
-		-- onRateChange
-		print("onRateChange: " .. rate)
-		if playDialog ~= nil and playDialog:isShowing() then playDialog:changeRate(rate) end
-	end)
-end
-
-function showRecordDialog()
-	playdate.graphics.sprite.removeAll()
-	recordDialog = RecordDialog()
-	recordDialog:show(function(parentPath)
-		if parentPath == nil then
-			--record cancelled
-			print("Recording cancelled")
-		else
-			-- set up everything
-			playDialog = PlayDialog()
-			print("Showing play dialog", function()
-				showSettings(0.5)
-			end)
-			playDialog:show(parentPath)
-		end
 	end)
 end
 

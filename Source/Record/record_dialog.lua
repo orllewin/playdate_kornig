@@ -91,7 +91,6 @@ function RecordDialog:show(onSampleReady)
 	self:addSprite(self.sourceLabel)
 	
 	self.previewButton = ButtonMinimal("Preview", 355, 120, 78, buttHeight, function() 
-		print("Playing sample...")
 		self:calculateSubsample()
 		self:playSubsample()
 	end)
@@ -120,7 +119,6 @@ end
 
 function RecordDialog:startRecording()
 	local countdownMs = self.maxSeconds * 1000
-	print("startRecording() ms: " .. countdownMs)
 	self.recordCountdownTimer = playdate.timer.new(countdownMs, 0, countdownMs)
 	self.recording = true
 	self.remainingLabel:setAlpha(1)
@@ -131,7 +129,6 @@ function RecordDialog:startRecording()
 end
 
 function RecordDialog:sampleRecorded()
-	print("sampleRecorded()")
 	self.remainingLabel:setAlpha(0.2)
 	self.recording = false
 	self.recordCountdownTimer:remove()
@@ -234,38 +231,16 @@ function RecordDialog:addSprite(sprite)
 	table.insert(sprites, sprite)
 end
 
-local x = 0.0
-local y = -1.00
-local z = -1.00
-local ii = 0
-
-local frame = 0
-local change = 0
-
 local inputLevel = 1
-
 local lx = 5
 
-function RecordDialog:updateAnimation()
-	frame = frame + 2
-
-	z = -1.00
-	y = -1.00
-	
+function RecordDialog:updateAnimation()	
 	inputLevel = sound.micinput.getLevel() * 250
 	
 	playdate.graphics.drawCircleAtPoint(200, 88, 5 * inputLevel) 
 	lx = math.max(5, math.floor(10 * inputLevel))
 	playdate.graphics.drawLine(lx, 55, lx, 120)
 	playdate.graphics.drawLine(400 - lx, 55, 400 - lx, 120)
-
-	-- for i = 490, 1050, 4 do
-	-- 	ii = i*0.001
-	-- 	x = ii + sin(z*0.02) * 0.1
-	-- 	y = (2 + inputLevel) * cos(ii * y - 2)
-	-- 	z = 8 + y * sin(12 * ii + (frame*0.03)) * 25.0
-	-- 	playdate.graphics.drawPixel(-130 + 425 * x, max(42, min(105, map(123 + z+y, 0, 400, 40, 130))))
-	-- end
 end
 
 -- See https://sdk.play.date/1.12.3/Inside%20Playdate.html#M-inputHandlers

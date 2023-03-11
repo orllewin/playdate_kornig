@@ -7,6 +7,7 @@ import 'CoracleViews/divider_horizontal'
 import 'CoracleViews/button_minimal'
 import 'Play/track_popup'
 import 'Record/record_dialog'
+import 'Settings/settings_dialog'
 
 class('PlayDialog').extends(playdate.graphics.sprite)
 
@@ -23,15 +24,14 @@ function PlayDialog:init()
 	playdate.graphics.setFont(font)
 end
 
-function PlayDialog:show(parentPath, onShowSettings)	
-	self.onShowSettings = onShowSettings
+function PlayDialog:show(parentPath)	
 	
 	local background = graphics.image.new(400, 240, graphics.kColorWhite)
 	self:moveTo(200, 120)
 	self:setImage(background)
 	self:add()
 	
-	self.titleLabel = LabelLeft("Granular .. . .  .  .   .", 6, 6, 0.4)
+	self.titleLabel = LabelLeft("Granular", 6, 6, 0.4)
 	
 	--self.topDiv = DividerHorizontal(6, 75, 388, 0.4)
 	--popManager:add(self.topDiv)
@@ -46,7 +46,16 @@ function PlayDialog:show(parentPath, onShowSettings)
 	self.trackViews = {self.trackView1, self.trackView2, self.trackView3, self.trackView4, self.trackView5}
 
 	self.settingsButton = ButtonMinimal("Global", 240, 4,  60, 10, function()
-		self.onShowSettings(grainPlayer:getNormalisedTempo())
+		local settingsDialog = SettingsDialog()
+		settingsDialog:show(grainPlayer:getNormalisedTempo(), function(tempo) 
+			-- onTempoChange 0.0 to 1.0
+			print("onTempoChange: " .. tempo)
+			self:changeTempo(tempo)
+		end, function(rate) 
+			-- onRateChange
+			print("onRateChange: " .. rate)
+			self:changeRate(rate)
+		end)
 	end)
 	focusManager:addView(self.settingsButton, 1)
 	

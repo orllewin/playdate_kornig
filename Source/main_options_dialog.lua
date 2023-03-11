@@ -9,6 +9,8 @@ import 'CoracleViews/label_centre'
 import 'CoracleViews/label_right'
 import 'CoracleViews/divider_horizontal'
 import 'CoracleViews/button_minimal'
+import 'Record/record_dialog'
+import 'Files/file_chooser_dialog'
 
 class('MainOptionDialog').extends(playdate.graphics.sprite)
 
@@ -18,9 +20,9 @@ function MainOptionDialog:init()
 	MainOptionDialog.super.init(self)
 end
 
-function MainOptionDialog:show(onOption)
+function MainOptionDialog:show(onAudioPath)
 	
-	self.onOption = onOption
+	self.onAudioPath = onAudioPath
 	
 	local background = graphics.image.new(400, 240, graphics.kColorWhite)
 	self:moveTo(200, 120)
@@ -29,31 +31,42 @@ function MainOptionDialog:show(onOption)
 	
 	graphics.setImageDrawMode(graphics.kDrawModeFillBlack)
 	
-	self.titleLabel = LabelLeft("Granular .. . .  .  .   .    .     .      .       .", 6, 6, 0.4)
+	self.titleLabel = LabelLeft("Granular", 6, 6, 0.4)
 	self.introLabel = LabelLeft("An experimental grain sampler.", 6, 54)
 	self.div = DividerHorizontal(6, 25, 388, 0.2)
 	
 	self.recordSampleButton = ButtonMinimal("Record Sample", 72, 90, 130, 20, function() 
-		playdate.inputHandlers.pop()
-		self.onOption("record")
-		self:dismiss()
+		-- 
+		-- self.onOption("record")
+		-- 
+		
+		local recordDialog = RecordDialog()
+		recordDialog:show(function(path) 
+				if path == nil then 
+					--user cancelled
+				else
+					self.onAudioPath(path)
+					self:dismiss()
+				end
+		end)
 	end)
 	self.recordSampleButton:setFocus(true)
 	
-	self.loadSampleButton = ButtonMinimal("Load Sample", 72, 122, 130, 20, function() 
-		playdate.inputHandlers.pop()
-		self.onOption("open")
-		self:dismiss()
+	self.loadSampleButton = ButtonMinimal("Load Sample", 72, 122, 130, 20, function() 		
+		local fileChooser = FileChooserDialog()
+		fileChooser:show(nil, function(path) 
+				self.onAudioPath(path)
+				self:dismiss()
+		end)
 	end)
 	
 	self.orlLabel = LabelRight("ORLLEWIN, YORKSHIRE", 394, 227, 0.4)
-
-	
+		
 	playdate.inputHandlers.push(self:getInputHandler())
 end
 
 function MainOptionDialog:dismiss()
-	
+	playdate.inputHandlers.pop()
 	self.titleLabel:remove()
 	self.introLabel:remove()
 	self.orlLabel:remove()
