@@ -25,7 +25,7 @@ graphics.sprite.setBackgroundDrawingCallback(function(x, y, width, height)
 	playdate.graphics.fillRect(0, 0, 400, 240)
 end)
 
-local font = playdate.graphics.font.new("Fonts/Roobert-11-Medium")
+local font = playdate.graphics.font.new("Fonts/font-rains-1x")
 playdate.graphics.setFont(font)
 
 --local sysBoldFont = playdate.graphics.getSystemFont(playdate.graphics.font.kVariantBold)
@@ -38,19 +38,6 @@ local playDialog = nil
 
 local menu = playdate.getSystemMenu()
 
-local recordMenuItem, error = menu:addMenuItem("Load", function() 
-	local fileChooserDialog = FileChooserDialog()
-	fileChooserDialog:show(function() 
-		-- onCancel
-	end, function(path) 
-		-- onFile
-	end)
-end)
-
-local recordMenuItem, error = menu:addMenuItem("Record", function() 
-	if playDialog ~= nil and playDialog:isShowing() then playDialog:stop() end
-	showRecordDialog()
-end)
 local invertMenuItem, error = menu:addMenuItem("Invert Display", function() 
 	inverted = not inverted
 	playdate.display.setInverted(inverted)

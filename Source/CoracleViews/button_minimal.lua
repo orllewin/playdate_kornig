@@ -10,7 +10,13 @@ function ButtonMinimal:init(label, xx, yy, w, h, listener)
 	
 	self.listener = listener
 	
-	self.label = LabelCentre(label, xx, yy, 0.4)
+	if h > 12 then
+		self.label = LabelCentre(label, xx, yy + h/4, 0.4)
+	else
+		self.label = LabelCentre(label, xx, yy, 0.4)
+	end
+	
+	
 	self.label:setAlpha(0.4)
 	
 	local nWidth, nHeight = playdate.graphics.getTextSize(label)

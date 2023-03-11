@@ -8,7 +8,7 @@ import 'CoracleViews/label_left'
 import 'CoracleViews/label_centre'
 import 'CoracleViews/label_right'
 import 'CoracleViews/divider_horizontal'
-import 'CoracleViews/button'
+import 'CoracleViews/button_minimal'
 
 class('MainOptionDialog').extends(playdate.graphics.sprite)
 
@@ -29,24 +29,24 @@ function MainOptionDialog:show(onOption)
 	
 	graphics.setImageDrawMode(graphics.kDrawModeFillBlack)
 	
-	self.titleLabel = LabelLeft("Granular", 6, 12)
+	self.titleLabel = LabelLeft("Granular .. . .  .  .   .    .     .      .       .", 6, 6, 0.4)
 	self.introLabel = LabelLeft("An experimental grain sampler.", 6, 54)
-	self.div = DividerHorizontal(6, 42, 388, 0.2)
+	self.div = DividerHorizontal(6, 25, 388, 0.2)
 	
-	self.recordSampleButton = Button("Record Sample", 76, 90, function() 
+	self.recordSampleButton = ButtonMinimal("Record Sample", 72, 90, 130, 20, function() 
 		playdate.inputHandlers.pop()
 		self.onOption("record")
 		self:dismiss()
 	end)
 	self.recordSampleButton:setFocus(true)
 	
-	self.loadSampleButton = Button("Load Sample", 66, 125, function() 
+	self.loadSampleButton = ButtonMinimal("Load Sample", 72, 122, 130, 20, function() 
 		playdate.inputHandlers.pop()
 		self.onOption("open")
 		self:dismiss()
 	end)
 	
-	self.orlLabel = LabelRight("ORLLEWIN, YORKSHIRE", 394, 217, 0.40)
+	self.orlLabel = LabelRight("ORLLEWIN, YORKSHIRE", 394, 227, 0.4)
 
 	
 	playdate.inputHandlers.push(self:getInputHandler())

@@ -8,6 +8,7 @@ import 'CoracleViews/label_left'
 import 'CoracleViews/label_centre'
 import 'CoracleViews/label_right'
 import 'CoracleViews/button'
+import 'CoracleViews/button_minimal'
 import 'Coracle/math'
 import 'Record/scrub_view'
 
@@ -24,6 +25,7 @@ local max <const> = math.max
 local frame = 0
 
 local MAX_SECONDS = 30
+local buttHeight = 20
  
 function RecordDialog:init(maxSeconds)
 	RecordDialog.super.init(self)
@@ -53,15 +55,16 @@ function RecordDialog:show(onSampleReady)
 	
 	graphics.setImageDrawMode(graphics.kDrawModeFillBlack)
 
-	self.titleLabel = LabelLeft("Record Sample", 6, 12)
+	self.titleLabel = LabelLeft("Record Sample .. . .  .  .   .    .     .      .       .", 6, 6, 0.4)
 	self:addSprite(self.titleLabel)
-	self.div = DividerHorizontal(6, 42, 388, 0.2)
+	self.div = DividerHorizontal(6, 25, 388, 0.2)
 	
 	
-	self.scrubView = ScrubView(52)
+	self.scrubView = ScrubView(35)
 	self:addSprites(self.scrubView:getSprites())
 	
-	self.recordToggleButton = Button("Start Recording", 82, 137, function() 
+	--label, xx, yy, w, h, listener
+	self.recordToggleButton = ButtonMinimal("Start Recording", 82, 120, 150, buttHeight, function() 
 		self.recording = not self.recording
 		if self.recording then
 			self.recordToggleButton:setText("Stop Recording")
@@ -78,16 +81,16 @@ function RecordDialog:show(onSampleReady)
 	self:addSprites(self.recordToggleButton:getSprites())
 	
 	
-	self.remainingLabel = LabelLeft("Remaining buffer: " .. self.maxSeconds, 8, 165, 0.2)
+	self.remainingLabel = LabelLeft("Remaining buffer: " .. self.maxSeconds, 8, 190, 0.2)
 	self:addSprite(self.remainingLabel)
 	
-	self.levelLabel = LabelLeft("", 8, 190, 1.0)
+	self.levelLabel = LabelLeft("", 8, 205, 1.0)
 	self:addSprite(self.levelLabel)
 	
-	self.sourceLabel = LabelLeft("Source: " .. sound.micinput.getSource(), 8, 215, 1.0)
+	self.sourceLabel = LabelLeft("Source: " .. sound.micinput.getSource(), 8, 220, 1.0)
 	self:addSprite(self.sourceLabel)
 	
-	self.previewButton = Button("Preview", 355, 137, function() 
+	self.previewButton = ButtonMinimal("Preview", 355, 120, 78, buttHeight, function() 
 		print("Playing sample...")
 		self:calculateSubsample()
 		self:playSubsample()
@@ -95,13 +98,13 @@ function RecordDialog:show(onSampleReady)
 	self.previewButton:setActive(false)
 	self:addSprites(self.previewButton:getSprites())
 	
-	self.cancelButton = Button("Cancel", 294, 215, function() 
+	self.cancelButton = ButtonMinimal("Cancel", 300, 215, 60, buttHeight, function() 
 		self.onSampleReady(nil)
 		self:dismiss()
 	end)
 	self:addSprites(self.cancelButton:getSprites())
 	
-	self.saveButton = Button("Save", 366, 215, function() 
+	self.saveButton = ButtonMinimal("Save", 366, 215, 60, buttHeight, function() 
 		local finalSample = self:generateSubsample()
 		assert(finalSample ~= nil, "Error generating final subsample")
 		finalSample:save("recording.pda")
@@ -212,7 +215,7 @@ end
 function RecordDialog:dismiss()
 	self.showing = false
 	playdate.inputHandlers.pop()
-	
+	self.div:remove()
 	for i=1,#sprites do
 		print("removin sprite: " .. tostring(sprites[i]))
 		sprites[i]:remove()

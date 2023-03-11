@@ -6,6 +6,7 @@ import 'CoracleViews/pop_manager'
 import 'CoracleViews/divider_horizontal'
 import 'CoracleViews/button_minimal'
 import 'Play/track_popup'
+import 'Record/record_dialog'
 
 class('PlayDialog').extends(playdate.graphics.sprite)
 
@@ -30,6 +31,8 @@ function PlayDialog:show(parentPath, onShowSettings)
 	self:setImage(background)
 	self:add()
 	
+	self.titleLabel = LabelLeft("Granular .. . .  .  .   .", 6, 6, 0.4)
+	
 	--self.topDiv = DividerHorizontal(6, 75, 388, 0.4)
 	--popManager:add(self.topDiv)
 	graphics.setImageDrawMode(graphics.kDrawModeFillBlack)
@@ -48,12 +51,21 @@ function PlayDialog:show(parentPath, onShowSettings)
 	focusManager:addView(self.settingsButton, 1)
 	
 	self.recordButton = ButtonMinimal("Record", 305, 4,  60, 10, function()
-		--todo
+		recordDialog = RecordDialog()
+		recordDialog:show(function(parentPath)
+			if parentPath == nil then
+				--record cancelled
+				print("Recording cancelled")
+			else
+				grainPlayer:initialise(parentPath, function(childConfigs)
+					self:initConfigs(childConfigs)
+				 end)
+			end
+		end)
 	end)
 	focusManager:addView(self.recordButton, 1)
 	
 	self.loadButton = ButtonMinimal("Load", 370, 4,  60, 10, function()
-		--todo
 		local fileChooser = FileChooserDialog()
 		fileChooser:show(nil, function(path) 
 				grainPlayer:initialise(path, function(childConfigs)

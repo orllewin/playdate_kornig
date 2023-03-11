@@ -14,7 +14,7 @@ function Button:init(label, xx, yy, listener)
 	
 	local nWidth, nHeight = playdate.graphics.getTextSize(label)
 	
-	local borderImage = playdate.graphics.image.new(nWidth + 20, nHeight + 6)
+	local borderImage = playdate.graphics.image.new(nWidth + 20, nHeight + 12)
 	playdate.graphics.pushContext(borderImage)
 	playdate.graphics.setColor(playdate.graphics.kColorBlack)
 	playdate.graphics.setLineWidth(1)
@@ -26,7 +26,7 @@ function Button:init(label, xx, yy, listener)
 	self.borderSprite:add()
 	self.borderSprite:setVisible(true)
 	
-	local focusedImage = playdate.graphics.image.new(nWidth + 20, nHeight + 6)
+	local focusedImage = playdate.graphics.image.new(nWidth + 20, nHeight + 12)
 	playdate.graphics.pushContext(focusedImage)
 	playdate.graphics.setColor(playdate.graphics.kColorBlack)
 	playdate.graphics.setLineWidth(3)
