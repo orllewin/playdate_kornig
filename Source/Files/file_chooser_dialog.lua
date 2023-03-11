@@ -30,12 +30,18 @@ function FileChooserDialog:show(onCancel, onFile)
 		end
 	end
 	
-	local background = graphics.image.new(400, 240, graphics.kColorWhite)
-	self:moveTo(200, 120)
+	local w = 190
+	local h = 172
+	local background = graphics.image.new(w, h, graphics.kColorWhite)
+	playdate.graphics.pushContext(background)
+	playdate.graphics.setColor(playdate.graphics.kColorBlack)
+	playdate.graphics.drawRoundRect(0, 0, w, h, 3)
+	playdate.graphics.popContext()
+	self:moveTo(400-(w/2), h/2)
 	self:setImage(background)
 	self:add()
 	
-	self.list = TextList(self.audioFiles, 5, 5, 290, 230, function(path)  
+	self.list = TextList(self.audioFiles, 400-w + 6, 6, w - 12, h - 12, function(path)  
 		print("Selected file: " .. path)
 	end)
 	self.list:setFocus(true)
@@ -45,8 +51,9 @@ function FileChooserDialog:show(onCancel, onFile)
 end
 
 function FileChooserDialog:dismiss()
-	--todo pop views
 	playdate.inputHandlers.pop()
+	self.list:removeAll()
+	self:remove()
 end
 
 -- See https://sdk.play.date/1.12.3/Inside%20Playdate.html#M-inputHandlers
@@ -56,13 +63,15 @@ function FileChooserDialog:getInputHandler()
 
 		end,
 		BButtonDown = function()
-
+			self:dismiss()
 		end,
 		BButtonUp = function()
 
 		end,
 		AButtonDown = function()
-
+			local selectedItem = self.list:getSelected()
+			if self.onFile ~= nil then self.onFile(selectedItem) end
+			self:dismiss()
 		end,
 		AButtonUp = function()
 

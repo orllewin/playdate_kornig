@@ -118,6 +118,10 @@ function TextList:emitSelected()
 	if self.onChange then self.onChange(self.index, self.items[self.index]) end
 end
 
+function TextList:getSelected()
+	return self.items[self.index]
+end
+
 function TextList:isFocused()
 	print("TextList:isFocused(): " .. tostring(self.hasFocus))
 	return self.hasFocus

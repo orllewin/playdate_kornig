@@ -41,11 +41,27 @@ function PlayDialog:show(parentPath, onShowSettings)
 	self.trackView5 = TrackView(66)
 	
 	self.trackViews = {self.trackView1, self.trackView2, self.trackView3, self.trackView4, self.trackView5}
-	
-	self.settingsButton = ButtonMinimal("Global", 370, 4,  60, 10, function()
+
+	self.settingsButton = ButtonMinimal("Global", 240, 4,  60, 10, function()
 		self.onShowSettings(grainPlayer:getNormalisedTempo())
 	end)
 	focusManager:addView(self.settingsButton, 1)
+	
+	self.recordButton = ButtonMinimal("Record", 305, 4,  60, 10, function()
+		--todo
+	end)
+	focusManager:addView(self.recordButton, 1)
+	
+	self.loadButton = ButtonMinimal("Load", 370, 4,  60, 10, function()
+		--todo
+		local fileChooser = FileChooserDialog()
+		fileChooser:show(nil, function(path) 
+				grainPlayer:initialise(path, function(childConfigs)
+					self:initConfigs(childConfigs)
+				 end)
+		end)
+	end)
+	focusManager:addView(self.loadButton, 1)
 	
 	self.control1 = GrainControl(1, function(index, value) 
 		-- onMove
@@ -318,28 +334,32 @@ function PlayDialog:show(parentPath, onShowSettings)
 	end)
 	
 	grainPlayer:initialise(parentPath, function(childConfigs) 
-		print("Initialising trackViews")
-		for c=1,#childConfigs do
-			print("init trackView " .. c)
-			local cfg = childConfigs[c]
-		  self.trackViews[c]:update(cfg)
-			
-			if c == 1 then
-				self.control1:initialise(cfg)
-			elseif c == 2 then
-				self.control2:initialise(cfg)
-			elseif c == 3 then
-				self.control3:initialise(cfg)
-			elseif c == 4 then
-				self.control4:initialise(cfg)
-			elseif c == 5 then
-				self.control5:initialise(cfg)
-			end
-
-		end
+		self:initConfigs(childConfigs)
 	end)
 
 	self.showing = true
+end
+
+function PlayDialog:initConfigs(childConfigs)
+	print("Initialising trackViews")
+	for c=1,#childConfigs do
+		print("init trackView " .. c)
+		local cfg = childConfigs[c]
+		self.trackViews[c]:update(cfg)
+		
+		if c == 1 then
+			self.control1:initialise(cfg)
+		elseif c == 2 then
+			self.control2:initialise(cfg)
+		elseif c == 3 then
+			self.control3:initialise(cfg)
+		elseif c == 4 then
+			self.control4:initialise(cfg)
+		elseif c == 5 then
+			self.control5:initialise(cfg)
+		end
+	
+	end
 end
 
 function PlayDialog:changeTempo(tempo)
