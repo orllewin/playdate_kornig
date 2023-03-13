@@ -1,8 +1,8 @@
-name=Grain
+name=Grainular
 author=Orllewin
 description=...
-bundleID=orllewin.playdate.grain
+bundleID=orllewin.playdate.grainular
 version=1.0.0
 imagePath=Images/
 pdxversion=11300
-buildtime=731948721
+buildtime=732032036

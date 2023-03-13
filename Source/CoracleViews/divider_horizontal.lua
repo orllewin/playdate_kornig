@@ -13,8 +13,20 @@ function DividerHorizontal:init(x, y, width, alpha)
 	
 	if alpha == nil then
 		lineImage:draw(0, 0)
+	elseif alpha > 0 and alpha < 0.2 then
+		lineImage:clear(playdate.graphics.kColorClear)
+		
+		playdate.graphics.pushContext(lineImage)
+		playdate.graphics.setColor(playdate.graphics.kColorWhite)
+		
+		for g=1,width,12 do
+			playdate.graphics.drawPixel(g, 1) 
+		end
+		
+		playdate.graphics.popContext()
+		lineImage:draw(0, 0)
 	else
-		lineImage:drawFaded(0, 0, alpha, playdate.graphics.image.kDitherTypeVerticalLine)
+		lineImage:drawFaded(0, 0, alpha, playdate.graphics.image.kDitherTypeBayer4x4)
 	end
 			
 	playdate.graphics.popContext()

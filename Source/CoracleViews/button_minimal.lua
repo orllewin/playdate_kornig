@@ -7,6 +7,7 @@ function ButtonMinimal:init(label, xx, yy, w, h, listener)
 	
 	self.hasFocus = false
 	self.active = true
+	self.disabled = false
 	
 	self.listener = listener
 	
@@ -75,14 +76,21 @@ function ButtonMinimal:setActive(active)
 	self.active = active
 	
 	if active then
-		self.label:setAlpha(1)
+		if self.disabled == false then
+			self.label:setAlpha(1)
+		end
 	else
-		self.label:setAlpha(0.2)
+		self.label:setAlpha(0.4)
 	end
 end
 
 function ButtonMinimal:isActive()
 	return self.active
+end
+
+function ButtonMinimal:setDisabled()
+	self.disabled = true
+	self.label:setAlpha(0.4)
 end
 
 function ButtonMinimal:setFocus(focus)
@@ -91,7 +99,9 @@ function ButtonMinimal:setFocus(focus)
 	
 	if focus then
 		self:setActive(true)
-		self.label:setAlpha(1)
+		if self.disabled == false then
+			self.label:setAlpha(1)
+		end
 	else
 		self.label:setAlpha(0.4)
 	end
@@ -101,6 +111,12 @@ function ButtonMinimal:tap()
 	self.focusedSprite:moveBy(0, 1)
 	playdate.timer.new(200, function()
 		self.focusedSprite:moveBy(0, -1)
-		if self.listener ~= nil then self.listener() end
+		
+		if self.disabled then
+			-- do nothing
+		else
+			if self.listener ~= nil then self.listener() end
+		end
+		
 	end)
 end

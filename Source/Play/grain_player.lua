@@ -195,6 +195,10 @@ end
 
 function GrainPlayer:stop()
 	self.stopped = true
+	
+	for i=1,#children do
+		children[i].player:stop()
+	end
 end
 
 function GrainPlayer:children()

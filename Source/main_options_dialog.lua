@@ -60,9 +60,25 @@ function MainOptionDialog:show(onAudioPath)
 		end)
 	end)
 	
+	
+	
 	self.orlLabel = LabelRight("ORLLEWIN, YORKSHIRE", 394, 227, 0.4)
 		
 	playdate.inputHandlers.push(self:getInputHandler())
+	
+	self.hasAudioFiles = false
+	local files = playdate.file.listFiles()
+	for f=1, #files do
+		local file = files[f]	
+		if endswith(file, ".pda") then
+			self.hasAudioFiles = true
+		end
+	end
+	
+	if not self.hasAudioFiles then
+		print("Setting load disabled")
+		self.loadSampleButton:setDisabled()
+	end
 end
 
 function MainOptionDialog:dismiss()

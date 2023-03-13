@@ -60,6 +60,7 @@ function PlayDialog:show(parentPath)
 	focusManager:addView(self.settingsButton, 1)
 	
 	self.recordButton = ButtonMinimal("Record", 305, 4,  60, 10, function()
+		grainPlayer:stop()
 		recordDialog = RecordDialog()
 		recordDialog:show(function(parentPath)
 			if parentPath == nil then

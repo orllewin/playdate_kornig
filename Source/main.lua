@@ -36,23 +36,25 @@ local invertMenuItem, error = menu:addMenuItem("Invert Display", function()
 	playdate.display.setInverted(inverted)
 end)
 
-local cachePath = "recording.pda"
-
-if playdate.file.exists(cachePath) then
-	play(cachePath)
-else
-	MainOptionDialog():show(function(path) 
-		play(path)
-	end)
-end
-
-function play(path)
+function playFile(path)
 	playDialog = PlayDialog()
 	print("Showing play dialog")
 	playDialog:show(path, function(normalisedTempo)
 			showSettings(normalisedTempo)
 	end)
 end
+
+local cachePath = "recording.pda"
+
+if playdate.file.exists(cachePath) then
+	playFile(cachePath)
+else
+	MainOptionDialog():show(function(path) 
+		playFile(path)
+	end)
+end
+
+	
 
 function playdate.update()
 	if recordDialog ~= nil and recordDialog:isShowing() then recordDialog:update() end
