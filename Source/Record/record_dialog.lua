@@ -237,10 +237,10 @@ local lx = 5
 function RecordDialog:updateAnimation()	
 	inputLevel = sound.micinput.getLevel() * 250
 	
-	playdate.graphics.drawCircleAtPoint(200, 88, 5 * inputLevel) 
+	playdate.graphics.drawCircleAtPoint(200, 72, 5 * inputLevel) 
 	lx = math.max(5, math.floor(10 * inputLevel))
-	playdate.graphics.drawLine(lx, 55, lx, 120)
-	playdate.graphics.drawLine(400 - lx, 55, 400 - lx, 120)
+	playdate.graphics.drawLine(lx, 36, lx, 101)
+	playdate.graphics.drawLine(400 - lx, 36, 400 - lx, 101)
 end
 
 -- See https://sdk.play.date/1.12.3/Inside%20Playdate.html#M-inputHandlers

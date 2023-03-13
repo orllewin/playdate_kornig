@@ -18,11 +18,14 @@ local graphics <const> = playdate.graphics
 
 function MainOptionDialog:init()
 	MainOptionDialog.super.init(self)
+	self.showing = false
 end
 
 function MainOptionDialog:show(onAudioPath)
 	
 	self.onAudioPath = onAudioPath
+	
+	self.showing = true
 	
 	local background = graphics.image.new(400, 240, graphics.kColorWhite)
 	self:moveTo(200, 120)
@@ -40,8 +43,8 @@ function MainOptionDialog:show(onAudioPath)
 		-- self.onOption("record")
 		-- 
 		
-		local recordDialog = RecordDialog()
-		recordDialog:show(function(path) 
+		self.recordDialog = RecordDialog()
+		self.recordDialog:show(function(path) 
 				if path == nil then 
 					--user cancelled
 				else
@@ -81,6 +84,14 @@ function MainOptionDialog:show(onAudioPath)
 	end
 end
 
+function MainOptionDialog:update()
+	if self.recordDialog ~= nil and self.recordDialog:isShowing() then self.recordDialog:update() end
+end
+
+function MainOptionDialog:updatePost()
+	if self.recordDialog ~= nil and self.recordDialog:isShowing() then self.recordDialog:updatePost() end
+end
+
 function MainOptionDialog:dismiss()
 	playdate.inputHandlers.pop()
 	self.titleLabel:remove()
@@ -90,6 +101,10 @@ function MainOptionDialog:dismiss()
 	self.loadSampleButton:removeAll()
 	self.recordSampleButton:removeAll()
 	self:remove()
+end
+
+function MainOptionDialog:isShowing()
+	return self.showing
 end
 
 -- See https://sdk.play.date/1.12.3/Inside%20Playdate.html#M-inputHandlers

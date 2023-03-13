@@ -16,7 +16,7 @@ local margin = 5
 function TrackView:init(yy)
 	TrackView.super.init(self)
 	self.yy = yy
-	self.midpointDiv = DividerVertical(200, yy, trackheight, 1)
+	self.midpointDiv = DividerVertical(200, yy, trackheight, 1, 3)
 	self.hDiv = DividerHorizontal(5, yy, 390, 0.1)
 	self.block = Block(200, yy, 20, trackheight, 0.4)
 end

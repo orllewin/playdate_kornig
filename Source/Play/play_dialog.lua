@@ -8,6 +8,7 @@ import 'CoracleViews/button_minimal'
 import 'Play/track_popup'
 import 'Record/record_dialog'
 import 'Settings/settings_dialog'
+import 'CoreLibs/keyboard'
 
 class('PlayDialog').extends(playdate.graphics.sprite)
 
@@ -15,6 +16,9 @@ local graphics <const> = playdate.graphics
 local grainPlayer = GrainPlayer()
 local focusManager = FocusManager()
 local popManager = PopManager()
+
+local FILENAME_PREFIX = "gnlr_"
+local filename = FILENAME_PREFIX
 
 function PlayDialog:init()
 	PlayDialog.super.init(self)
@@ -45,7 +49,7 @@ function PlayDialog:show(parentPath)
 	
 	self.trackViews = {self.trackView1, self.trackView2, self.trackView3, self.trackView4, self.trackView5}
 
-	self.settingsButton = ButtonMinimal("Global", 240, 4,  60, 10, function()
+	self.settingsButton = ButtonMinimal("Global", 175, 4,  60, 10, function()
 		local settingsDialog = SettingsDialog()
 		settingsDialog:show(grainPlayer:getNormalisedTempo(), function(tempo) 
 			-- onTempoChange 0.0 to 1.0
@@ -59,10 +63,10 @@ function PlayDialog:show(parentPath)
 	end)
 	focusManager:addView(self.settingsButton, 1)
 	
-	self.recordButton = ButtonMinimal("Record", 305, 4,  60, 10, function()
+	self.recordButton = ButtonMinimal("Record", 240, 4,  60, 10, function()
 		grainPlayer:stop()
-		recordDialog = RecordDialog()
-		recordDialog:show(function(parentPath)
+		self.recordDialog = RecordDialog()
+		self.recordDialog:show(function(parentPath)
 			if parentPath == nil then
 				--record cancelled
 				print("Recording cancelled")
@@ -75,7 +79,7 @@ function PlayDialog:show(parentPath)
 	end)
 	focusManager:addView(self.recordButton, 1)
 	
-	self.loadButton = ButtonMinimal("Load", 370, 4,  60, 10, function()
+	self.loadButton = ButtonMinimal("Open", 305, 4,  60, 10, function()
 		local fileChooser = FileChooserDialog()
 		fileChooser:show(nil, function(path) 
 				grainPlayer:initialise(path, function(childConfigs)
@@ -84,6 +88,12 @@ function PlayDialog:show(parentPath)
 		end)
 	end)
 	focusManager:addView(self.loadButton, 1)
+	
+	self.saveButton = ButtonMinimal("Save", 370, 4,  60, 10, function()
+		playdate.keyboard.show("gnlr_")
+		local keyboardWidth = playdate.keyboard.width()
+	end)
+	focusManager:addView(self.saveButton, 1)
 	
 	self.control1 = GrainControl(1, function(index, value) 
 		-- onMove
@@ -403,8 +413,21 @@ end
 function PlayDialog:update()
 	if self.showing == false then return end
 	grainPlayer:update()
+	
+	if self.recordDialog ~= nil and self.recordDialog:isShowing() then
+		self.recordDialog:update()
+	end
+end
+
+function PlayDialog:updatePost()
+	if self.recordDialog ~= nil and self.recordDialog:isShowing() then self.recordDialog:updatePost() end
 end
 
 function PlayDialog:dismiss()
 	popManager:popAll()
+end
+
+function playdate.keyboard.textChangedCallback()
+	filename = playdate.keyboard.text
+	print("save filename: " .. filename)
 end

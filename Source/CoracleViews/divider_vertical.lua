@@ -1,13 +1,18 @@
 class('DividerVertical').extends(playdate.graphics.sprite)
 
-function DividerVertical:init(x, y, height, alpha)
+function DividerVertical:init(x, y, height, alpha, lineWidth)
 	DividerVertical.super.init(self)
 	local dividerImage = playdate.graphics.image.new(3, height)
 	playdate.graphics.pushContext(dividerImage)
 	local lineImage = playdate.graphics.image.new(3, height)
 	playdate.graphics.pushContext(lineImage)
 	playdate.graphics.setColor(playdate.graphics.kColorWhite)
-	playdate.graphics.setLineWidth(1)
+	if lineWidth == nil then
+		playdate.graphics.setLineWidth(1)
+	else
+		playdate.graphics.setLineWidth(lineWidth)
+	end
+	
 	playdate.graphics.drawLine(1, 0, 1, height) 
 	playdate.graphics.popContext()
 	

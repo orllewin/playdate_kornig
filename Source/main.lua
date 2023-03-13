@@ -1,7 +1,7 @@
 --[[
 	
-	kornig
-	grainy, granular
+	granular
+	grainy, 
 	the obstinate knot in the grain of things
 	
 --]]
@@ -26,7 +26,7 @@ playdate.graphics.setFont(font)
 
 playdate.setMenuImage(playdate.graphics.image.new("Images/elderwean"), 100)
 
-local recordDialog = nil
+local optionsDialog = nil
 local playDialog = nil
 
 local menu = playdate.getSystemMenu()
@@ -49,19 +49,19 @@ local cachePath = "recording.pda"
 if playdate.file.exists(cachePath) then
 	playFile(cachePath)
 else
-	MainOptionDialog():show(function(path) 
+	optionsDialog = MainOptionDialog()
+	optionsDialog:show(function(path) 
 		playFile(path)
 	end)
 end
 
-	
-
 function playdate.update()
-	if recordDialog ~= nil and recordDialog:isShowing() then recordDialog:update() end
+	if optionsDialog ~= nil and optionsDialog:isShowing() then optionsDialog:update() end
 	if playDialog ~= nil and playDialog:isShowing() then playDialog:update() end
 	
 	playdate.graphics.sprite.update()
 	playdate.timer.updateTimers()
 	
-	if recordDialog ~= nil and recordDialog:isShowing() then recordDialog:updatePost() end
+	if playDialog ~= nil and recordDialog:isShowing() then recordDialog:updatePost() end
+	if optionsDialog ~= nil and optionsDialog:isShowing() then optionsDialog:updatePost() end
 end
