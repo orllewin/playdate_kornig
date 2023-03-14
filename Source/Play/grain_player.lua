@@ -47,6 +47,10 @@ function GrainPlayer:init()
 	GrainPlayer.super.init(self)
 end
 
+function GrainPlayer:save(filename)
+	pSample:save(filename)
+end
+
 function GrainPlayer:initialise(samplePath, onReady)
 	print("loading parent sample from path.." .. samplePath)
 	pSample:load(samplePath)

@@ -55,10 +55,8 @@ function playdate.keyboard.keyboardDidHideCallback()
 	
 	if filename == FILENAME_PREFIX then
 		print("save cancelled")
-
+		--show toast, or not bother?
 	else
-		--save
-		
 		instance.onSave(filename)
 	end
 end
