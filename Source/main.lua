@@ -62,6 +62,6 @@ function playdate.update()
 	playdate.graphics.sprite.update()
 	playdate.timer.updateTimers()
 	
-	if playDialog ~= nil and recordDialog:isShowing() then recordDialog:updatePost() end
+	if playDialog ~= nil and playDialog:isShowing() then playDialog:updatePost() end
 	if optionsDialog ~= nil and optionsDialog:isShowing() then optionsDialog:updatePost() end
 end

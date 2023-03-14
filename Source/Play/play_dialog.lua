@@ -8,7 +8,7 @@ import 'CoracleViews/button_minimal'
 import 'Play/track_popup'
 import 'Record/record_dialog'
 import 'Settings/settings_dialog'
-import 'CoreLibs/keyboard'
+import 'Play/save_popup'
 
 class('PlayDialog').extends(playdate.graphics.sprite)
 
@@ -16,9 +16,6 @@ local graphics <const> = playdate.graphics
 local grainPlayer = GrainPlayer()
 local focusManager = FocusManager()
 local popManager = PopManager()
-
-local FILENAME_PREFIX = "gnlr_"
-local filename = FILENAME_PREFIX
 
 function PlayDialog:init()
 	PlayDialog.super.init(self)
@@ -53,11 +50,9 @@ function PlayDialog:show(parentPath)
 		local settingsDialog = SettingsDialog()
 		settingsDialog:show(grainPlayer:getNormalisedTempo(), function(tempo) 
 			-- onTempoChange 0.0 to 1.0
-			print("onTempoChange: " .. tempo)
 			self:changeTempo(tempo)
 		end, function(rate) 
 			-- onRateChange
-			print("onRateChange: " .. rate)
 			self:changeRate(rate)
 		end)
 	end)
@@ -90,8 +85,9 @@ function PlayDialog:show(parentPath)
 	focusManager:addView(self.loadButton, 1)
 	
 	self.saveButton = ButtonMinimal("Save", 370, 4,  60, 10, function()
-		playdate.keyboard.show("gnlr_")
-		local keyboardWidth = playdate.keyboard.width()
+		SavePopup():show(function (filename)
+			print("Save file: " .. filename)
+		end)
 	end)
 	focusManager:addView(self.saveButton, 1)
 	
@@ -425,9 +421,4 @@ end
 
 function PlayDialog:dismiss()
 	popManager:popAll()
-end
-
-function playdate.keyboard.textChangedCallback()
-	filename = playdate.keyboard.text
-	print("save filename: " .. filename)
 end
